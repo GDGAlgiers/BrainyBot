@@ -13,8 +13,8 @@ class Invite(commands.Cog, name="invite"):
         self.bot = bot
 
     @commands.command(name="invite")
-    async def invite(self, context):
-      await context.send("hello world");
+    async def invite(self, context, member:discord.Member):
+      await context.send("inviting {}".format(member.mention));
 
 
 def setup(bot):
