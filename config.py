@@ -7,3 +7,6 @@ STARTUP_COGS = [
     "cogs.general", "cogs.help", "cogs.owner", "cogs.invite"
 ]
 APPLICATION_ID = "803040512314966037"
+
+# Invite command configs
+INVITATION_CHANNEL_NAME = "invite-commands" # can only be executed inside the category we have created

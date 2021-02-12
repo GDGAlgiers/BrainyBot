@@ -14,7 +14,10 @@ class Invite(commands.Cog, name="invite"):
 
     @commands.command(name="invite")
     async def invite(self, context, member:discord.Member):
-      await context.send("inviting {}".format(member.mention));
+      currentChannel = context.channel;
+      
+      if(currentChannel.name == config.INVITATION_CHANNEL_NAME):
+        await currentChannel.send("inviting {}".format(member.mention));
 
 
 def setup(bot):
