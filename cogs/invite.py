@@ -13,11 +13,18 @@ class Invite(commands.Cog, name="invite"):
         self.bot = bot
 
     @commands.command(name="invite")
-    async def invite(self, context, member:discord.Member):
-      currentChannel = context.channel;
-      
-      if(currentChannel.name == config.INVITATION_CHANNEL_NAME):
-        await currentChannel.send("inviting {}".format(member.mention));
+    async def invite(self, context, member: discord.Member):
+        author = context.author
+        currentChannel = context.channel
+
+        if (currentChannel.name == config.INVITATION_CHANNEL_NAME):
+            channels = author.guild.channels
+            team_channels = filter(lambda channel:channel.name.startswith(config.TEAM_WORKSPACE_PREFIX),channels)
+            
+            for team in team_channels:
+              await currentChannel.send("{} is a member in {}".format(author.name,team.mention))
+
+            await currentChannel.send("inviting {}".format(member.mention))
 
 
 def setup(bot):
