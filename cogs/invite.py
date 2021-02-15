@@ -29,7 +29,7 @@ class Invite(commands.Cog, name="invite"):
             for team in team_channels:
                 await currentChannel.send("{} is a member in {}".format(
                     author.name, team.mention))
-                
+
                 overwrite = discord.PermissionOverwrite(
                     read_messages=True,
                     read_message_history=True,
@@ -37,10 +37,12 @@ class Invite(commands.Cog, name="invite"):
                     embed_links=True,
                     attach_files=True,
                     add_reactions=True,
-                )
+                    connect=True,
+                    speak=True)
                 await team.set_permissions(member, overwrite=overwrite)
 
-                await team.send("walcome {}".format(member.mention))
+                if (team.type == "text"):
+                    await team.send("walcome {}".format(member.mention))
 
             await currentChannel.send("inviting {}".format(member.mention))
 
