@@ -12,6 +12,8 @@ import os
 import platform
 import sys
 from discord.ext import commands
+from core.db import db
+from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
@@ -48,6 +50,10 @@ intents.members = True
 
 
 intents = discord.Intents.default()
+intents.members = True
+intents.reactions = True
+intents.messages = True
+intents.emojis = True
 
 bot = commands.Bot(command_prefix=config.BOT_PREFIX, intents=intents)
 
@@ -97,6 +103,109 @@ if __name__ == "__main__":
             print(f"Failed to load extension {extension}\n{exception}")
 
 
+
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    reaction = str(payload.emoji)
+    msg_id = payload.message_id
+    ch_id = payload.channel_id
+    user_id = payload.user_id
+    guild_id = payload.guild_id
+    exists = db.exists(msg_id)
+
+    if isinstance(exists, Exception):
+        await print(
+            f"Database error after a user added a reaction:\n```\n{exists}\n```",
+        )
+
+    elif exists:
+        # Checks that the message that was reacted to is a reaction-role message managed by the bot
+        reactions = db.get_reactions(msg_id)
+
+        if isinstance(reactions, Exception):
+            await print(
+
+                f"Database error when getting reactions:\n```\n{reactions}\n```",
+            )
+            return
+
+        ch = await getchannel(bot,ch_id)
+        msg = await ch.fetch_message(msg_id)
+        user = await getuser(bot,user_id)
+        if reaction not in reactions:
+            # Removes reactions added to the reaction-role message that are not connected to any role
+            await msg.remove_reaction(reaction, user)
+
+        else:
+            # Gives role if it has permissions, else 403 error is raised
+            role_id = reactions[reaction]
+            server = await getguild(bot,guild_id)
+            member = server.get_member(user_id)
+            role = discord.utils.get(server.roles, id=role_id)
+            if user_id != bot.user.id:
+                try:
+                    await member.add_roles(role)
+
+                except discord.Forbidden:
+                    await print(
+
+                        "Someone tried to add a role to themselves but I do not have"
+                        " permissions to add it. Ensure that I have a role that is"
+                        " hierarchically higher than the role I have to assign, and"
+                        " that I have the `Manage Roles` permission.",
+                    )
+
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    reaction = str(payload.emoji)
+    msg_id = payload.message_id
+    user_id = payload.user_id
+    guild_id = payload.guild_id
+    exists = db.exists(msg_id)
+
+    if isinstance(exists, Exception):
+        await print(
+
+            f"Database error after a user removed a reaction:\n```\n{exists}\n```",
+        )
+
+    elif exists:
+        # Checks that the message that was unreacted to is a reaction-role message managed by the bot
+        reactions = db.get_reactions(msg_id)
+
+        if isinstance(reactions, Exception):
+            await print(
+                f"Database error when getting reactions:\n```\n{reactions}\n```",
+            )
+
+        elif reaction in reactions:
+            role_id = reactions[reaction]
+            # Removes role if it has permissions, else 403 error is raised
+            server = await getguild(bot,guild_id)
+            member = server.get_member(user_id)
+
+            if not member:
+                member = await server.fetch_member(user_id)
+
+            role = discord.utils.get(server.roles, id=role_id)
+            try:
+                await member.remove_roles(role)
+
+            except discord.Forbidden:
+                await print(
+                    "Someone tried to remove a role from themselves but I do not have"
+                    " permissions to remove it. Ensure that I have a role that is"
+                    " hierarchically higher than the role I have to remove, and that I"
+                    " have the `Manage Roles` permission.",
+                )
+
+
+
+
+
+
 # The code in this event is executed every time a command has been *successfully* executed
 @bot.event
 async def on_command_completion(ctx):
@@ -106,9 +215,9 @@ async def on_command_completion(ctx):
     print(
         f"Executed {executedCommand} command in {ctx.guild.name} by {ctx.message.author} (ID: {ctx.message.author.id})")
 
+
+
 # The code in this event is executed every time a valid commands catches an error
-
-
 @bot.event
 async def on_command_error(context, error):
     if isinstance(error, commands.CommandOnCooldown):
