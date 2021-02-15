@@ -9,7 +9,7 @@ STARTUP_COGS = [
 APPLICATION_ID = "803040512314966037"
 
 # Invite command configs
-INVITATION_CHANNEL_NAME = "invite-commands" # can only be executed inside the category we have created
+CATEGORY_FOR_INVITATION = "hashcode" # can only be executed inside the **category** we have created
 
 # A prefex to denote that a channel belongs to a team and not a public channel
 TEAM_WORKSPACE_PREFIX = "team-"

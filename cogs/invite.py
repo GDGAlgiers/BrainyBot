@@ -16,8 +16,9 @@ class Invite(commands.Cog, name="invite"):
     async def invite(self, context, member: discord.Member):
         author = context.author
         currentChannel = context.channel
+        currentCategory = currentChannel.category
 
-        if (currentChannel.name == config.INVITATION_CHANNEL_NAME):
+        if (currentCategory.name == config.CATEGORY_FOR_INVITATION):
             channels = author.guild.channels
 
             team_channels = filter(
@@ -38,7 +39,7 @@ class Invite(commands.Cog, name="invite"):
                     add_reactions=True,
                 )
                 await team.set_permissions(member, overwrite=overwrite)
-                
+
                 await team.send("walcome {}".format(member.mention))
 
             await currentChannel.send("inviting {}".format(member.mention))
