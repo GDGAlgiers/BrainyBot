@@ -19,30 +19,29 @@ class Invite(commands.Cog, name="invite"):
         currentCategory = currentChannel.category
 
         if (currentCategory.name == config.CATEGORY_FOR_INVITATION):
-            channels = author.guild.channels
+            categories = author.guild.categories
+            team_categories = filter(
+                lambda category: category.name.startswith(
+                    config.TEAM_WORKSPACE_PREFIX) == True and category.
+                permissions_for(author).read_messages == True, categories)
 
-            team_channels = filter(
-                lambda channel: channel.name.startswith(
-                    config.TEAM_WORKSPACE_PREFIX) == True and channel.
-                permissions_for(author).read_messages == True, channels)
+            team_category = next(team_categories)
+            #team_channels = team_category.channels
 
-            for team in team_channels:
-                await currentChannel.send("{} is a member in {}".format(
-                    author.name, team.mention))
+            overwrite = discord.PermissionOverwrite(
+                view_channel=True,
+                read_messages=True,
+                read_message_history=True,
+                send_messages=True,
+                embed_links=True,
+                attach_files=True,
+                add_reactions=True,
+                connect=True,
+                speak=True,
+                stream=True
+            )
 
-                overwrite = discord.PermissionOverwrite(
-                    read_messages=True,
-                    read_message_history=True,
-                    send_messages=True,
-                    embed_links=True,
-                    attach_files=True,
-                    add_reactions=True,
-                    connect=True,
-                    speak=True)
-                await team.set_permissions(member, overwrite=overwrite)
-
-                if (team.type == "text"):
-                    await team.send("walcome {}".format(member.mention))
+            await team_category.set_permissions(member, overwrite=overwrite)
 
             await currentChannel.send("inviting {}".format(member.mention))
 
