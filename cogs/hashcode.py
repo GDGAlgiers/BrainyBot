@@ -19,12 +19,12 @@ class hashcode(commands.Cog):
 
     
     # get the time left to end of the hashcode
-    # TODO: remove hard coded start time
+    # TODO: change hard coded start time
     start_time = datetime.datetime(2021, 2, 25, 17, 0, 0, 0)
     duration = datetime.timedelta(hours=4)
     end = start_time + duration
 
-    @commands.command()
+    @commands.command(description="Get the time left to the end of the competition")
     async def timeLeft(self, ctx):
         now = datetime.datetime.now()
         delta = end - now
@@ -34,7 +34,7 @@ class hashcode(commands.Cog):
         await ctx.send(f"Time left {hours_left}hours {minutes_left}minutes {seconds_left}seconds")
     
     # post a message by the moderator to a specified channel
-    @commands.command()
+    @commands.command(description="Post in a specified channel (Only bot moderator)")
     async def post(ctx, channel_name, *, message=None):
         author = ctx.message.author
         if "botmoderator" in [y.name.lower() for y in author.roles]:
