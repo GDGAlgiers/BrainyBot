@@ -19,10 +19,15 @@ class Invite(commands.Cog, name="invite"):
 
         if (currentChannel.name == config.INVITATION_CHANNEL_NAME):
             channels = author.guild.channels
-            team_channels = filter(lambda channel:channel.name.startswith(config.TEAM_WORKSPACE_PREFIX),channels)
-            
+
+            team_channels = filter(
+                lambda channel: channel.name.startswith(
+                    config.TEAM_WORKSPACE_PREFIX) == True and channel.
+                permissions_for(author).read_messages == True, channels)
+
             for team in team_channels:
-              await currentChannel.send("{} is a member in {}".format(author.name,team.mention))
+                await currentChannel.send("{} is a member in {}".format(
+                    author.name, team.mention))
 
             await currentChannel.send("inviting {}".format(member.mention))
 
