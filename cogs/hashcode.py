@@ -19,8 +19,7 @@ class hashcode(commands.Cog):
 
     
     # get the time left to end of the hashcode
-    # TODO: change hard coded start time
-    start_time = datetime.datetime(2021, 2, 25, 17, 0, 0, 0)
+    start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
     duration = datetime.timedelta(hours=4)
     end = start_time + duration
 
