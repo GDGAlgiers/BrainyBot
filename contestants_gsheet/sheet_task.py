@@ -1,37 +1,72 @@
-import gspead
+import gspread
 import requests
 import uuid
 import hashlib
-from config import gc, myhub_api, sheet_name, token
+from config import MYHUB_API
 
-def sheet_task():
-    #try:
-    #    json_data = get_contestants_data(token)
-    #except requests.exceptions.RequestException as e:
-    #    print(e)
-    sheet = create_sheet()
+
+def sheet_task(gc, sheet_name, token=None):
+    json_data = {
+        'items': [
+            {
+                'email': 'in_boulechfar@esi.dz',
+                'firstName': 'Nassim',
+                'lastName': 'BOULECHFAR',
+                'teamName': 'Bytes'
+            },
+            {
+                'email': 'id_zebbiche@esi.dz',
+                'firstName': 'Dhaieddine',
+                'lastName': 'ZEBBICHE',
+                'teamName': 'Bytes'
+            },
+            {
+                'email': 'im_gouaouri@esi.dz',
+                'firstName': 'Mohammeddhiyaeddine',
+                'lastName': 'GOUAOURI',
+                'teamName': 'Bytes'
+            },
+            {
+                'email': 'ia_chabounia@esi.dz',
+                'firstName': 'Aimad',
+                'lastName': 'CHABOUNIA',
+                'teamName': 'Bytes'
+            },
+        ]
+    }
+    if token != None:
+        try:
+            json_data = get_contestants_data(token)
+        except requests.exceptions.RequestException as e:
+            print(e)
+    sheet = create_sheet(gc, sheet_name)
     # get the first sheet of the Spreadsheet
     sheet_instance = sheet.get_worksheet(0)
     write_data(sheet_instance, json_data)
 
+
 def get_contestants_data(token):
     headers = {
-    'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {token}'
     }
-    response = requests.request("GET", myhub_api+'/contestants', 
-    headers=headers, data={})
+    response = requests.request("GET", f'{MYHUB_API}/contestants',
+                                headers=headers, data={})
     return response.json()
 
-def create_sheet():
+
+def create_sheet(gc, sheet_name):
     try:
         sheet = gc.open(sheet_name)
         gc.del_spreadsheet(sheet.id)
         sheet = gc.create(sheet_name)
     except gspread.exceptions.SpreadsheetNotFound:
         sheet = gc.create(sheet_name)
-    sheet.share('in_boulechfar@esi.dz', perm_type='user', role='writer',
-    notify=False)
+    sheet.share('ha_boutouchent@esi.dz', perm_type='user',
+                role='writer', notify=False)
+    print(
+        f"Spread Sheet created and shared you can check this url {sheet.url}")
     return sheet
+
 
 def write_data(sheet_instance, json_data):
     sheet_instance.insert_row(
@@ -53,35 +88,6 @@ def write_data(sheet_instance, json_data):
         sheet_instance.insert_row(row, i)
         i += 1
 
-
-json_data = {
-    'items': [
-        {
-            'email': 'in_boulechfar@esi.dz',
-            'firstName': 'Nassim',
-            'lastName': 'BOULECHFAR',
-            'teamName': 'Bytes'
-        },
-        {
-            'email': 'id_zebbiche@esi.dz',
-            'firstName': 'Dhaieddine',
-            'lastName': 'ZEBBICHE',
-            'teamName': 'Bytes'
-        },
-        {
-            'email': 'im_gouaouri@esi.dz',
-            'firstName': 'Mohammeddhiyaeddine',
-            'lastName': 'GOUAOURI',
-            'teamName': 'Bytes'
-        },
-        {
-            'email': 'ia_chabounia@esi.dz',
-            'firstName': 'Aimad',
-            'lastName': 'CHABOUNIA',
-            'teamName': 'Bytes'
-        },
-    ]
-}
 
 if __name__ == '__main__':
     sheet_task()
