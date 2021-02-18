@@ -45,9 +45,10 @@ def write_data(sheet_instance, json_data):
         if not teammate:
             team_name = item['teamName']
             item_uuid = uuid.uuid4().hex
+            item_hash = hashlib.md5(item_uuid.encode('utf-8')).hexdigest()
         row = [
             item_uuid,
-            hashlib.md5(item_uuid.encode('utf-8')).hexdigest()
+            item_hash
         ] + [item[key] for key in item]
         sheet_instance.insert_row(row, i)
         i += 1
