@@ -1,6 +1,6 @@
 import gspread
 import requests
-import uuid
+import os
 import hashlib
 from config import MYHUB_API
 
@@ -63,6 +63,8 @@ def create_sheet(gc, sheet_name):
         sheet = gc.create(sheet_name)
     sheet.share('ha_boutouchent@esi.dz', perm_type='user',
                 role='writer', notify=False)
+    sheet.share('hm_amirouche@esi.dz', perm_type='user',
+                role='writer', notify=False)
     print(
         f"Spread Sheet created and shared you can check this url {sheet.url}")
     return sheet
@@ -79,8 +81,11 @@ def write_data(sheet_instance, json_data):
         teammate = item['teamName'] == team_name
         if not teammate:
             team_name = item['teamName']
-            item_uuid = uuid.uuid4().hex
-            item_hash = hashlib.md5(item_uuid.encode('utf-8')).hexdigest()
+            item_id = os.urandom(8).hex()
+            item_uuid = "-".join([item_id[i:i+4]
+                                  for i in range(len(item_id)//4)])
+            print(item_uuid)
+            item_hash = hashlib.md5(item_uuid.encode("utf-8")).hexdigest()
         row = [
             item_uuid,
             item_hash
