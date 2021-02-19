@@ -71,11 +71,8 @@ def create_sheet(gc, sheet_name):
 
 
 def write_data(sheet_instance, json_data):
-    sheet_instance.insert_row(
-        ['uuid', 'hashed_uuid']+[key for key in json_data['items'][0]],
-        1
-    )
-    i = 2
+    contestants_data = []
+    contestants_data.append(['uuid', 'hashed_uuid']+[key for key in json_data['items'][0]])
     team_name = ''
     for item in json_data['items']:
         teammate = item['teamName'] == team_name
@@ -84,14 +81,17 @@ def write_data(sheet_instance, json_data):
             item_id = os.urandom(8).hex()
             item_uuid = "-".join([item_id[i:i+4]
                                   for i in range(len(item_id)//4)])
-            print(item_uuid)
             item_hash = hashlib.md5(item_uuid.encode("utf-8")).hexdigest()
         row = [
             item_uuid,
             item_hash
         ] + [item[key] for key in item]
-        sheet_instance.insert_row(row, i)
-        i += 1
+        contestants_data.append(row)
+    try:
+        sheet_instance.update(contestants_data)
+    except gspread.exceptions.APIError as e:
+        print(e)
+        
 
 
 if __name__ == '__main__':
