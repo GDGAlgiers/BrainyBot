@@ -222,5 +222,5 @@ class Database:
             return e
 
 directory = os.path.dirname(os.path.realpath(__file__))
-db_file = f"{directory}/db/brainy.db"
+db_file = f"{directory}/brainy.db"
 db = Database(db_file)
