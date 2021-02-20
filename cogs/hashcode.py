@@ -2,6 +2,7 @@
     This is where we will put all our hashcode commands
 """
 import os
+import datetime
 import sys
 import discord
 from discord.ext import commands
@@ -11,11 +12,25 @@ else:
     import config
 
 
-class hashcode(commands.Cog, name="hashcode"):
+
+class hashcode(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        # get the time left to end of the hashcode
+        self.start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
+        self.duration = datetime.timedelta(hours=4)
+        self.end = self.start_time + self.duration
 
-    @commands.command(name="test")
-    async def test(self, context):
-        "This is a test command"
-        await context.send("This is a test command")
+    @commands.command(description="Get the time left to the end of the competition")
+    async def timeLeft(self, ctx):
+        now = datetime.datetime.now()
+        delta = self.end - now
+        hours_left = delta.seconds // 3600
+        minutes_left = (delta.seconds % 3600) // 60
+        seconds_left = (delta.seconds % 3600 ) % 60
+        await ctx.message.channel.send(f"Time left {hours_left}hours {minutes_left}minutes {seconds_left}seconds")
+    
+
+
+def setup(bot):
+    bot.add_cog(hashcode(bot))
