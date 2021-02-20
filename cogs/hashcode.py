@@ -11,8 +11,6 @@ if not os.path.isfile("config.py"):
 else:
     import config
 
-
-
 class hashcode(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,11 +22,16 @@ class hashcode(commands.Cog):
     @commands.command(description="Get the time left to the end of the competition")
     async def timeLeft(self, ctx):
         now = datetime.datetime.now()
-        delta = self.end - now
-        hours_left = delta.seconds // 3600
-        minutes_left = (delta.seconds % 3600) // 60
-        seconds_left = (delta.seconds % 3600 ) % 60
-        await ctx.message.channel.send(f"Time left {hours_left}hours {minutes_left}minutes {seconds_left}seconds")
+        if now > self.end:
+            await ctx.message.channel.send(f"The contest has ended :) ")
+        elif now< self.start_time:
+            await ctx.message.channel.send(f"The contest has still not started :) ")
+        else:
+            delta = self.end - now
+            hours_left = delta.seconds // 3600
+            minutes_left = (delta.seconds % 3600) // 60
+            seconds_left = (delta.seconds % 3600 ) % 60
+            await ctx.message.channel.send(f"Time left {hours_left}hours {minutes_left}minutes {seconds_left}seconds")
     
 
 

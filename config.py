@@ -1,4 +1,4 @@
-TOKEN = "ODAzMDQwNTEyMzE0OTY2MDM3.YA3_wQ.iZ6CTH9vzPhh0glckQHaH-hZNlg"
+TOKEN = "ODAzMDQwNTEyMzE0OTY2MDM3.YA3_wQ.5JNR9W7Mk8UBPR0Tsesf6lRWZRw"
 # Can be multiple prefixes, like this: ("!", "?")
 BOT_PREFIX = ("$")
 OWNERS = [516805045199699969]
