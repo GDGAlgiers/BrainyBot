@@ -16,12 +16,10 @@ else:
 class hashcode(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    
-    # get the time left to end of the hashcode
-    start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
-    duration = datetime.timedelta(hours=4)
-    end = start_time + duration
+        # get the time left to end of the hashcode
+        self.start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
+        self.duration = datetime.timedelta(hours=4)
+        self.end = self.start_time + self.duration
 
     @commands.command(description="Get the time left to the end of the competition")
     async def timeLeft(self, ctx):
