@@ -11,7 +11,9 @@ import asyncio
 import os
 import platform
 import sys
-from discord.ext import commands
+import datetime
+import time 
+from discord.ext import commands,tasks
 from core.db import db
 from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
@@ -20,33 +22,6 @@ if not os.path.isfile("config.py"):
 else:
     import config
 
-
-"""	
-Setup bot intents (events restrictions)
-For more information about intents, please go to the following websites:
-https://discordpy.readthedocs.io/en/latest/intents.html
-https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
-Default Intents:
-intents.messages = True
-intents.reactions = True
-intents.guilds = True
-intents.emojis = True
-intents.bans = True
-intents.guild_typing = False
-intents.typing = False
-intents.dm_messages = False
-intents.dm_reactions = False
-intents.dm_typing = False
-intents.guild_messages = True
-intents.guild_reactions = True
-intents.integrations = True
-intents.invites = True
-intents.voice_states = False
-intents.webhooks = False
-Privileged Intents (Needs to be enabled on dev page):
-intents.presences = True
-intents.members = True
-"""
 
 
 intents = discord.Intents.default()
@@ -228,6 +203,66 @@ async def on_command_error(context, error):
         )
         await context.send(embed=embed)
     raise error
+
+
+######################### HashCOde Timer ###############################################
+
+
+message_sent = False 
+
+@tasks.loop(seconds=1.0)
+async def timer():
+    curr = datetime.datetime.now
+    await bot.wait_until_ready()
+    channel = bot.get_channel(config.HASHCODE_GENERAL_CHANNEL_ID)
+    global message_sent
+    if config.HASHCODE_START_DATE.hour == curr().hour and config.HASHCODE_START_DATE.minute ==curr().minute and curr().second == 57:
+      if not message_sent:
+        await channel.send('3')
+        time.sleep(1)
+        await channel.send('2')
+        time.sleep(1)
+        await channel.send('1')
+        time.sleep(1)
+        await channel.send('***GOO***')
+        message_sent = True
+    
+
+    
+    lasth =config.HASHCODE_END_DATE.hour-curr().hour
+    lastm =config.HASHCODE_END_DATE.minute-curr().minute
+    lasts =config.HASHCODE_END_DATE.second-curr().second
+    if lasth == 1:
+      if lastm == 0 and lasts == 0:
+       await channel.send("1 hour left :hourglass_flowing_sand:")
+      elif lastm == -30 and lasts == 0:
+        await channel.send("30 minutes left :hourglass:")
+    elif lastm==30 and lasts==0 and lasth == 0:
+      await channel.send("30 minutes left :hourglass:")
+    elif lastm==1 and lasth == 0:
+      lasts =(60+ config.HASHCODE_END_DATE.second)-curr().second
+      if lasts == 10:
+        for i in range(10,0,-1):
+          await channel.send(str(i)+" seconds :hourglass:")
+          time.sleep(1)
+        await channel.send("**TIME OVER** :alarm_clock:")
+    elif lasth == 0 and lastm == 0:
+      if lasts == 10:
+        for i in range(10,0,-1):
+          await channel.send(str(i)+" seconds :hourglass:")
+          time.sleep(1)
+        await channel.send("**TIME OVER** :alarm_clock:")
+    #print(lasth)
+    #print(lastm)
+    #print(lasts)
+
+dt = datetime.datetime.now()
+
+if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START_DATE.month and dt.day==config.HASHCODE_START_DATE.day and dt.hour <= config.HASHCODE_END_DATE.hour ):
+    timer.start()
+
+
+######################### HashCOde Timer ###############################################
 
 # run this function to launch the background job
 keep_alive()
