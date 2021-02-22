@@ -1,3 +1,4 @@
+#!/usr/bin/python3 
 """
     #######################################################################################
                         This is the main file for our bot it contains initialization      #
@@ -76,7 +77,6 @@ if __name__ == "__main__":
             exception = f"{type(e).__name__}: {e}"
             extension = extension.replace("cogs.", "")
             print(f"Failed to load extension {extension}\n{exception}")
-
 
 
 
@@ -202,7 +202,22 @@ async def on_command_error(context, error):
             color=0x00FF00
         )
         await context.send(embed=embed)
+    elif isinstance(error, commands.errors.PrivateMessageOnly):
+        embed = discord.Embed(
+            title="DMs only",
+            description="This service is only available in direct messages",
+            colour=discord.Colour.gold()
+        )
+        await context.send(embed=embed)
+    elif isinstance(error, commands.errors.MissingRequiredArgument):
+        embed = discord.Embed(
+            title="Missing Arguments",
+            description="you need to specify the UUID",
+            colour=discord.Colour.gold()
+        )
+        await context.send(embed=embed)
     raise error
+        
 
 
 ######################### HashCOde Timer ###############################################
