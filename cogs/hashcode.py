@@ -3,11 +3,14 @@
 """
 import time
 import os
+import asyncio
+import re
 import sys
 import discord
 from discord.ext import commands
 from discord.ext.commands import dm_only
 from discord.utils import get
+from core.utils import message_check
 from hashlib import md5
 from discord.ext.tasks import loop
 if not os.path.isfile("config.py"):
@@ -38,10 +41,10 @@ def Auth(uuid):
     'https://www.googleapis.com/auth/drive'
     ]
     import gspread
-    if not os.path.isfile("gsp_creds.json"):
-        sys.exit("'gsp_creds.json' not found! Please add it and try again.")
+    if not os.path.isfile("brainy.json"):
+        sys.exit("'brainy.json' not found! Please add it and try again.")
     else:
-        gc = gspread.service_account(filename='gsp_creds.json',scopes=SCOPES)
+        gc = gspread.service_account(filename='brainy.json',scopes=SCOPES)
 
     sheet_name = "hashcode-gdg-hub-contestants"
     sheet = gc.open(sheet_name).get_worksheet(0).get_all_records()
@@ -63,98 +66,69 @@ class hashcode(commands.Cog, name="hashcode"):
 
     @commands.command(name="checkin")
     async def checkin(self, ctx):
-        "Command Description"
+        """ Start check-in to join your private workspace"""
+        """
+        if ctx.channel.id is not 775491463940669480:
+            return
+        """
         if ctx.author.id in users:
-            await ctx.author.send(Error("Already logged in!"))
+            await ctx.author.send(embed=Error("Already logged in!"))
         else:
+            participant = {}
             user_id = ctx.author.id
-            users[user_id]={
-                "lastactive" : time.time()
-            }
-            embed = discord.Embed(
-                title="Join", description="List of available commands:", color=0x00FF00)
-            embed.add_field(name='Join',value = "$join \" PASSWORD \"\nMake sure you execute it at DM",inline=False)
-            await ctx.author.send(embed=embed)
-
-
-    @dm_only()
-    @commands.command(name="join")
-    async def join(self, ctx,uuid: str):
-        if ctx.author.id not in users:
-            await ctx.author.send(embed=Error("Not logged in!"))
-        else:
-            if len(uuid) != UUID_LENGTH :
-                await ctx.send(embed=Error("Wrong UUID !"))
+            try:
+                sent_initial_message = await ctx.author.send("Hello To checkin fonctionality please provide us your key ")
+                response = await self.bot.wait_for('message',timeout=120, check=message_check(channel=ctx.author.dm_channel))
+            except asyncio.TimeoutError: 
+                await ctx.author.send("you took too long to provide the requested information.")
+            finally:
+                await sent_initial_message.delete()
+            uuid  = response.content.strip()
+            if len(uuid) != UUID_LENGTH or  not re.match(r'[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}',uuid) :
+                await ctx.author.send(embed=Error("Wrong UUID !"))
             else:
-                await ctx.send("Please be patient!")
-                #Authentication
+                users[user_id]={
+                "lastactive" : time.time()
+                }
                 TeamExist,TeamName=Auth(uuid)
-                if not TeamExist:
-                    await ctx.send(embed=Error("Wrong UUID !"))
+                #retrieving the Server guild
+                guild = self.bot.guilds[0]                  
+                workspace_category = guild.get_channel(config.HASHCODE_CATEGORY_WORKSPACE_ID)
+                print(guild)
+                print(guild.roles)
+                team_role = get(guild.roles, name=f"{TeamName}_member")
+                if team_role:
+                    if team_role in ctx.author.roles:
+                        await ctx.author.send(embed=Error("You have already joined your space"))
+                    else:
+                        print(team_role)
+                        await ctx.author.add_roles(team_role)
+                        await ctx.author.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
+                        #sending logs to logs channel 
+                        log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
+                        await log_channel.send(f" @{ctx.author} has joined {TeamName}_team .")
                 else:
-                    #retrieving the Server guild
-                    guild = self.bot.guilds[0]
-                    
-                    #sending logs to logs channel 
-                    log_channel = get(guild.text_channels, name="logs")
-                    await log_channel.send(f"{ctx.author} has joined {TeamName}_team .")
-                    
-                    member=ctx.author
-                    overwrites = discord.PermissionOverwrite(
-                                view_channel=True,
-                                read_messages=True,
-                                read_message_history=True,
-                                send_messages=True,
-                                embed_links=True,
-                                attach_files=True,
-                                add_reactions=True,
-                                connect=True,
-                                speak=True,
-                                stream=True
-                            )
-                        
-                    #verifying if the category is already created
-                    categories = guild.categories
-                    team_category=list(filter(lambda category:category if category.name == f"{TeamName}_category" else None,categories))
-                    if team_category :
-                        team_category = team_category[0]
+                    await guild.create_role(name=f"{TeamName}_member")
+                    role = get(guild.roles, name=f"{TeamName}_member")
+                    overwrites = {
+                        guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                        guild.me: discord.PermissionOverwrite(read_messages=True),
+                        role: discord.PermissionOverwrite(read_messages=True)
+                    }
+                    try:
+                        channel = await guild.create_text_channel(f"{TeamName}_space",category=workspace_category, overwrites=overwrites)
+                        channel_voice = await guild.create_voice_channel(f"{TeamName}_space",category=workspace_category, overwrites=overwrites)
+                    except Exception as errors:
+                        print(f"Bot Error: {errors}")
+                    finally:
+                        await ctx.author.add_roles(role)
+                        await ctx.author.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
+                        #sending logs to logs channel 
+                        log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
+                        await log_channel.send(f" @{ctx.author} has joined {TeamName}_team .")
+                
 
-
-                        await team_category.set_permissions(member, overwrite=overwrites)
-                        await ctx.send(f"You have been successfully added to {TeamName}_channels! ")
-                    else: #Creating the category and its channels
-                        try:
-                            '''
-                            category_overwrites = discord.PermissionOverwrite(
-                                view_channel=False,
-                                read_messages=False,
-                                read_message_history=False,
-                                send_messages=False,
-                                embed_links=False,
-                                attach_files=False,
-                                add_reactions=False,
-                                connect=False,
-                                speak=False,
-                                stream=False
-                            )
-                            '''
-                            category = await guild.create_category(f"{TeamName}_category", overwrites=None, reason=None)
-                            
-                            await category.set_permissions(member, overwrite=overwrites)
-                            await guild.create_voice_channel(f"voice-channel", overwrites=None, category=category, reason=None)
-                            await guild.create_text_channel(f"text-channel", overwrites=None, category=category, reason=None)
-                            await ctx.send(f"{TeamName}_channels are Created Successfully!")
-                        except Exception as errors:
-                            print(f"Bot Error: {errors}")
         
 
-
 def setup(bot):
-    @loop(minutes=INACTIVE_TIMEOUT)
-    async def logout_inactive():
-        for user_id in list(users):
-            if time.time() - users[user_id]["lastactive"] > INACTIVE_TIMEOUT:
-                users.pop(user_id)
-                await bot.get_user(user_id).send(":timer: Logged out due to inactivity")
-    logout_inactive.start()
     bot.add_cog(hashcode(bot))
