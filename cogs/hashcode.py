@@ -5,6 +5,7 @@ import time
 import os
 import asyncio
 import re
+import datetime
 import sys
 import discord
 from discord.ext import commands
@@ -17,6 +18,7 @@ if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
     import config
+
 
 UUID_LENGTH=19
 # timeout for logging out an inactive user
@@ -62,7 +64,24 @@ def Auth(uuid):
 class hashcode(commands.Cog, name="hashcode"):
     def __init__(self, bot):
         self.bot = bot
-        
+        # get the time left to end of the hashcode
+        self.start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
+        self.duration = datetime.timedelta(hours=4)
+        self.end = self.start_time + self.duration
+
+    @commands.command(description="Get the time left to the end of the competition")
+    async def timeLeft(self, ctx):
+        now = datetime.datetime.now()
+        if now > self.end:
+            await ctx.message.channel.send(f"The contest has ended :) ")
+        elif now< self.start_time:
+            await ctx.message.channel.send(f"The contest has still not started :) ")
+        else:
+            delta = self.end - now
+            hours_left = delta.seconds // 3600
+            minutes_left = (delta.seconds % 3600) // 60
+            seconds_left = (delta.seconds % 3600 ) % 60
+            await ctx.message.channel.send(f"Time left {hours_left}hours {minutes_left}minutes {seconds_left}seconds")
 
     @commands.command(name="checkin")
     async def checkin(self, ctx):
@@ -129,6 +148,7 @@ class hashcode(commands.Cog, name="hashcode"):
                 
 
         
+
 
 def setup(bot):
     bot.add_cog(hashcode(bot))
