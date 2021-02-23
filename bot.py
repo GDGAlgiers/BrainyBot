@@ -1,3 +1,4 @@
+#!/usr/bin/python3 
 """
     #######################################################################################
                         This is the main file for our bot it contains initialization      #
@@ -11,7 +12,11 @@ import asyncio
 import os
 import platform
 import sys
-from discord.ext import commands
+import datetime
+import time 
+from discord.ext import commands,tasks
+from core.db import db
+from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
@@ -19,35 +24,12 @@ else:
     import config
 
 
-"""	
-Setup bot intents (events restrictions)
-For more information about intents, please go to the following websites:
-https://discordpy.readthedocs.io/en/latest/intents.html
-https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
-Default Intents:
-intents.messages = True
-intents.reactions = True
-intents.guilds = True
-intents.emojis = True
-intents.bans = True
-intents.guild_typing = False
-intents.typing = False
-intents.dm_messages = False
-intents.dm_reactions = False
-intents.dm_typing = False
-intents.guild_messages = True
-intents.guild_reactions = True
-intents.integrations = True
-intents.invites = True
-intents.voice_states = False
-intents.webhooks = False
-Privileged Intents (Needs to be enabled on dev page):
-intents.presences = True
-intents.members = True
-"""
-
 
 intents = discord.Intents.default()
+intents.members = True
+intents.reactions = True
+intents.messages = True
+intents.emojis = True
 
 bot = commands.Bot(command_prefix=config.BOT_PREFIX, intents=intents)
 
@@ -97,6 +79,108 @@ if __name__ == "__main__":
             print(f"Failed to load extension {extension}\n{exception}")
 
 
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    reaction = str(payload.emoji)
+    msg_id = payload.message_id
+    ch_id = payload.channel_id
+    user_id = payload.user_id
+    guild_id = payload.guild_id
+    exists = db.exists(msg_id)
+
+    if isinstance(exists, Exception):
+        await print(
+            f"Database error after a user added a reaction:\n```\n{exists}\n```",
+        )
+
+    elif exists:
+        # Checks that the message that was reacted to is a reaction-role message managed by the bot
+        reactions = db.get_reactions(msg_id)
+
+        if isinstance(reactions, Exception):
+            await print(
+
+                f"Database error when getting reactions:\n```\n{reactions}\n```",
+            )
+            return
+
+        ch = await getchannel(bot,ch_id)
+        msg = await ch.fetch_message(msg_id)
+        user = await getuser(bot,user_id)
+        if reaction not in reactions:
+            # Removes reactions added to the reaction-role message that are not connected to any role
+            await msg.remove_reaction(reaction, user)
+
+        else:
+            # Gives role if it has permissions, else 403 error is raised
+            role_id = reactions[reaction]
+            server = await getguild(bot,guild_id)
+            member = server.get_member(user_id)
+            role = discord.utils.get(server.roles, id=role_id)
+            if user_id != bot.user.id:
+                try:
+                    await member.add_roles(role)
+
+                except discord.Forbidden:
+                    await print(
+
+                        "Someone tried to add a role to themselves but I do not have"
+                        " permissions to add it. Ensure that I have a role that is"
+                        " hierarchically higher than the role I have to assign, and"
+                        " that I have the `Manage Roles` permission.",
+                    )
+
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    reaction = str(payload.emoji)
+    msg_id = payload.message_id
+    user_id = payload.user_id
+    guild_id = payload.guild_id
+    exists = db.exists(msg_id)
+
+    if isinstance(exists, Exception):
+        await print(
+
+            f"Database error after a user removed a reaction:\n```\n{exists}\n```",
+        )
+
+    elif exists:
+        # Checks that the message that was unreacted to is a reaction-role message managed by the bot
+        reactions = db.get_reactions(msg_id)
+
+        if isinstance(reactions, Exception):
+            await print(
+                f"Database error when getting reactions:\n```\n{reactions}\n```",
+            )
+
+        elif reaction in reactions:
+            role_id = reactions[reaction]
+            # Removes role if it has permissions, else 403 error is raised
+            server = await getguild(bot,guild_id)
+            member = server.get_member(user_id)
+
+            if not member:
+                member = await server.fetch_member(user_id)
+
+            role = discord.utils.get(server.roles, id=role_id)
+            try:
+                await member.remove_roles(role)
+
+            except discord.Forbidden:
+                await print(
+                    "Someone tried to remove a role from themselves but I do not have"
+                    " permissions to remove it. Ensure that I have a role that is"
+                    " hierarchically higher than the role I have to remove, and that I"
+                    " have the `Manage Roles` permission.",
+                )
+
+
+
+
+
+
 # The code in this event is executed every time a command has been *successfully* executed
 @bot.event
 async def on_command_completion(ctx):
@@ -106,9 +190,9 @@ async def on_command_completion(ctx):
     print(
         f"Executed {executedCommand} command in {ctx.guild.name} by {ctx.message.author} (ID: {ctx.message.author.id})")
 
+
+
 # The code in this event is executed every time a valid commands catches an error
-
-
 @bot.event
 async def on_command_error(context, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -118,7 +202,82 @@ async def on_command_error(context, error):
             color=0x00FF00
         )
         await context.send(embed=embed)
+    elif isinstance(error, commands.errors.PrivateMessageOnly):
+        embed = discord.Embed(
+            title="DMs only",
+            description="This service is only available in direct messages",
+            colour=discord.Colour.gold()
+        )
+        await context.send(embed=embed)
+    elif isinstance(error, commands.errors.MissingRequiredArgument):
+        embed = discord.Embed(
+            title="Missing Arguments",
+            description="you need to specify the UUID",
+            colour=discord.Colour.gold()
+        )
+        await context.send(embed=embed)
     raise error
+        
+
+
+######################### HashCOde Timer ###############################################
+
+
+message_sent = False 
+
+@tasks.loop(seconds=1.0)
+async def timer():
+    curr = datetime.datetime.now
+    await bot.wait_until_ready()
+    channel = bot.get_channel(config.HASHCODE_GENERAL_CHANNEL_ID)
+    global message_sent
+    if config.HASHCODE_START_DATE.hour == curr().hour and config.HASHCODE_START_DATE.minute ==curr().minute and curr().second == 57:
+      if not message_sent:
+        await channel.send('3')
+        time.sleep(1)
+        await channel.send('2')
+        time.sleep(1)
+        await channel.send('1')
+        time.sleep(1)
+        await channel.send('***GOO***')
+        message_sent = True
+    
+
+    
+    lasth =config.HASHCODE_END_DATE.hour-curr().hour
+    lastm =config.HASHCODE_END_DATE.minute-curr().minute
+    lasts =config.HASHCODE_END_DATE.second-curr().second
+    if lasth == 1:
+      if lastm == 0 and lasts == 0:
+       await channel.send("1 hour left :hourglass_flowing_sand:")
+      elif lastm == -30 and lasts == 0:
+        await channel.send("30 minutes left :hourglass:")
+    elif lastm==30 and lasts==0 and lasth == 0:
+      await channel.send("30 minutes left :hourglass:")
+    elif lastm==1 and lasth == 0:
+      lasts =(60+ config.HASHCODE_END_DATE.second)-curr().second
+      if lasts == 10:
+        for i in range(10,0,-1):
+          await channel.send(str(i)+" seconds :hourglass:")
+          time.sleep(1)
+        await channel.send("**TIME OVER** :alarm_clock:")
+    elif lasth == 0 and lastm == 0:
+      if lasts == 10:
+        for i in range(10,0,-1):
+          await channel.send(str(i)+" seconds :hourglass:")
+          time.sleep(1)
+        await channel.send("**TIME OVER** :alarm_clock:")
+    #print(lasth)
+    #print(lastm)
+    #print(lasts)
+
+dt = datetime.datetime.now()
+
+if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START_DATE.month and dt.day==config.HASHCODE_START_DATE.day and dt.hour <= config.HASHCODE_END_DATE.hour ):
+    timer.start()
+
+
+######################### HashCOde Timer ###############################################
 
 # run this function to launch the background job
 keep_alive()
