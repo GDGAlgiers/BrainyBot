@@ -72,6 +72,7 @@ class hashcode(commands.Cog, name="hashcode"):
     @commands.command(description="Get the time left to the end of the competition")
     async def timeLeft(self, ctx):
         """ Get the time left to the end of the competition """
+        print(config.HASHCODE_START_DATE)
         now = datetime.datetime.now()
         if now > self.end:
             await ctx.message.channel.send(f"The contest has ended :) ")
