@@ -190,7 +190,6 @@ class hashcode(commands.Cog, name="hashcode"):
                 cancelled = True
             finally:
                 await sent_initial_message.delete()
-                await response.delete()
             if not cancelled:
                 uuid  = response.content.strip()
                 await ctx.author.trigger_typing()
