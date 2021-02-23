@@ -10,6 +10,11 @@ STARTUP_COGS = [
 MODERATOR_ROLE ="mod"
 APPLICATION_ID = "803040512314966037"
 
+# Invite command configs
+CATEGORY_FOR_INVITATION = "hashcode" # can only be executed inside the **category** we have created
+
+# A prefex to denote that a channel belongs to a team and not a public channel
+TEAM_WORKSPACE_PREFIX = "team-"
 
 ############ HASHCODE PROPERTIES ###########
 HASHCODE_LOGS_CHANNEL_ID = 791601343189483520
