@@ -204,7 +204,7 @@ class hashcode(commands.Cog, name="hashcode"):
                         if TeamExist:
                             team_role = get(guild.roles, name=f"hashcode_{TeamName}_member")
                             if team_role:
-                                if team_role in ctx.author.roles:
+                                if team_role in member.roles:
                                     await ctx.author.send(embed=Error("The member has already joined the workspace"))
                                 else:
                                     await member.add_roles(team_role)
