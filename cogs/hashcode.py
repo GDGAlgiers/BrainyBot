@@ -65,7 +65,7 @@ class hashcode(commands.Cog, name="hashcode"):
     def __init__(self, bot):
         self.bot = bot
         # get the time left to end of the hashcode
-        self.start_time = datetime.datetime(2021, 2, 25, 18, 30, 0, 0)
+        self.start_time = config.HASHCODE_START_DATE
         self.duration = datetime.timedelta(hours=4)
         self.end = self.start_time + self.duration
 
