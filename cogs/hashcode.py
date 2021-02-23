@@ -190,7 +190,7 @@ class hashcode(commands.Cog, name="hashcode"):
                 cancelled = True
             finally:
                 await sent_initial_message.delete()
-                response.delete()
+                await response.delete()
             if not cancelled:
                 uuid  = response.content.strip()
                 await ctx.author.trigger_typing()
@@ -199,6 +199,8 @@ class hashcode(commands.Cog, name="hashcode"):
                 else:
                     TeamExist,TeamName=Auth(uuid)
                     TeamName = TeamName.lower()
+                    print(team_name)
+                    print(TeamName)
                     if TeamName!=team_name:
                         await ctx.author.send(embed=Error("You provided a wrong uuid  !"))
                     else:
