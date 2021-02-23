@@ -198,9 +198,7 @@ class hashcode(commands.Cog, name="hashcode"):
                 else:
                     TeamExist,TeamName=Auth(uuid)
                     TeamName = TeamName.lower()
-                    print(team_name)
-                    print(TeamName)
-                    if TeamName!=team_name:
+                    if TeamName!=team_name[0]:
                         await ctx.author.send(embed=Error("You provided a wrong uuid  !"))
                     else:
                         if TeamExist:
