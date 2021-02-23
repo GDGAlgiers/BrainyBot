@@ -93,7 +93,6 @@ class hashcode(commands.Cog, name="hashcode"):
         if ctx.author.id in users:
             await ctx.author.send(embed=Error("Already logged in!"))
         else:
-            participant = {}
             user_id = ctx.author.id
             cancelled = False
             await ctx.author.trigger_typing()
@@ -103,7 +102,6 @@ class hashcode(commands.Cog, name="hashcode"):
             except asyncio.TimeoutError: 
                 await ctx.author.send("you took too long to provide the requested information.")
                 cancelled = True
-
             finally:
                 await sent_initial_message.delete()
             if not cancelled:
@@ -210,6 +208,8 @@ class hashcode(commands.Cog, name="hashcode"):
                                     await member.add_roles(team_role)
                                     await member.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
                                     await ctx.author.send(":white_check_mark: MEMBER INVITED !")
+                                    log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
+                                    await log_channel.send(f" {member.mention} has joined {TeamName}_team .")
                             else:
                                 await ctx.author.send(embed=Error("Something wrong happened seems like no one has created the workspace please use `!checkin` to create workspace"))
                         else:
