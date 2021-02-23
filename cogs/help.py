@@ -30,7 +30,6 @@ class Help(commands.Cog, name="help"):
             cog = self.bot.get_cog(i.lower())
             commands = cog.get_commands()
             command_list = [command.name for command in commands]
-            print(commands)
             command_description = [command.help for command in commands]
             help_text = '\n'.join(
                 f'{prefix}{n} - {h}' for n, h in zip(command_list, command_description))
