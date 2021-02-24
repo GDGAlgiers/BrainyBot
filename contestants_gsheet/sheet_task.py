@@ -3,34 +3,35 @@ import requests
 import os
 import hashlib
 from config import MYHUB_API,PRIVATE_SHEET_NAME
+from send_mails import SendDynamic
 
 
 def sheet_task(gc, sheet_name, token=None):
     json_data = {
         'items': [
             {
-                'email': 'in_boulechfar@esi.dz',
-                'firstName': 'Nassim',
-                'lastName': 'BOULECHFAR',
-                'teamName': 'Bytes'
+                'email': 'ha_boutouchent@esi.dz',
+                'firstName': 'Akram',
+                'lastName': 'BOUTOUCHENT',
+                'teamName': '-10A'
             },
             {
-                'email': 'id_zebbiche@esi.dz',
-                'firstName': 'Dhaieddine',
-                'lastName': 'ZEBBICHE',
-                'teamName': 'Bytes'
+                'email': 'hi_hamdine@esi.dz',
+                'firstName': 'Israa',
+                'lastName': 'Hamdine',
+                'teamName': '10A'
             },
             {
-                'email': 'im_gouaouri@esi.dz',
-                'firstName': 'Mohammeddhiyaeddine',
-                'lastName': 'GOUAOURI',
-                'teamName': 'Bytes'
+                'email': 'akramboutouchent@gmail.com',
+                'firstName': 'Akram',
+                'lastName': 'Boutouchent',
+                'teamName': 'BOOO'
             },
             {
-                'email': 'ia_chabounia@esi.dz',
+                'email': 'a.boutouchent@esi-sba.dz',
                 'firstName': 'Aimad',
                 'lastName': 'CHABOUNIA',
-                'teamName': 'Bytes'
+                'teamName': 'BOOO'
             },
         ]
     }
@@ -44,7 +45,8 @@ def sheet_task(gc, sheet_name, token=None):
     # get the first sheet of the Spreadsheet
     sheet_instance = sheet.get_worksheet(0)
     private_sheet_instance = private_sheet.get_worksheet(0)
-    write_data(sheet_instance,private_sheet_instance, json_data)
+    contest_data =write_data(sheet_instance,private_sheet_instance, json_data)
+    SendDynamic(contest_data[1:])
 
 
 def get_contestants_data(token):
@@ -98,6 +100,7 @@ def write_data(sheet_instance, private_sheet_instance,json_data):
     try:
         sheet_instance.update(contestants_data)
         private_sheet_instance.update(private_data)
+        return private_data
     except gspread.exceptions.APIError as e:
         print(e)
         
