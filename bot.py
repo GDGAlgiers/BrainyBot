@@ -272,7 +272,7 @@ async def timer():
     #print(lasts)
 
 dt = datetime.datetime.now()
-
+print(dt)
 if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START_DATE.month and dt.day==config.HASHCODE_START_DATE.day and dt.hour <= config.HASHCODE_END_DATE.hour ):
     timer.start()
 
