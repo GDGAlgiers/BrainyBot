@@ -164,7 +164,8 @@ class hashcode(commands.Cog, name="hashcode"):
             workspace_category = guild.get_channel(config.HASHCODE_CATEGORY_WORKSPACE_ID)
             channels = workspace_category.channels
             for channel in channels:
-                await channel.delete()
+                print(channel)
+                #await channel.delete()
             await ctx.send("All the channels had been deleted ")
     
     @commands.command(name="invite")
