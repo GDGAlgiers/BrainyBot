@@ -249,11 +249,11 @@ async def timer():
     lasts =config.HASHCODE_END_DATE.second-curr().second
     if lasth == 1:
       if lastm == 0 and lasts == 0:
-       await channel.send("1 hour left :hourglass_flowing_sand:")
+       await channel.send("Only one hour separates us from the official start of the most awaited HashCode competition :partying_face: We can hear your hearts beating fast :eyes:")
       elif lastm == -30 and lasts == 0:
-        await channel.send("30 minutes left :hourglass:")
+        await channel.send("Tik Tok :stopwatch: We hope you didn't fall asleep because only 30 minutes are left for the competition :heart_eyes:  HOW EXCITING IS THAT!! :star_struck:")
     elif lastm==30 and lasts==0 and lasth == 0:
-      await channel.send("30 minutes left :hourglass:")
+      await channel.send("Tik Tok :stopwatch: We hope you didn't fall asleep because only 30 minutes are left for the competition :heart_eyes:  HOW EXCITING IS THAT!! :star_struck:")
     elif lastm==1 and lasth == 0:
       lasts =(60+ config.HASHCODE_END_DATE.second)-curr().second
       if lasts == 10:
@@ -267,12 +267,10 @@ async def timer():
           await channel.send(str(i)+" seconds :hourglass:")
           time.sleep(1)
         await channel.send("**TIME OVER** :alarm_clock:")
-    #print(lasth)
-    #print(lastm)
-    #print(lasts)
+
 
 dt = datetime.datetime.now()
-print(dt)
+
 if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START_DATE.month and dt.day==config.HASHCODE_START_DATE.day and dt.hour <= config.HASHCODE_END_DATE.hour ):
     timer.start()
 
@@ -281,7 +279,7 @@ if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START
 
 # run this function to launch the background job
 keep_alive()
-print(config.HASHCODE_START_DATE)
+
 
 # Run the bot with the token
 bot.run(config.TOKEN)

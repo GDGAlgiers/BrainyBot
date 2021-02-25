@@ -75,9 +75,9 @@ class hashcode(commands.Cog, name="hashcode"):
         print(config.HASHCODE_START_DATE)
         now = datetime.datetime.now()
         if now > self.end:
-            await ctx.message.channel.send(f"The contest has ended :) ")
+            await ctx.message.channel.send(f"HashCode has officially ended :partying_face:  See you at the next edition! :heart_eyes:")
         elif now< self.start_time:
-            await ctx.message.channel.send(f"The contest has still not started :) ")
+            await ctx.message.channel.send(f"The competition hasn't started yet! keep your patience for a little more time :eyes:")
         else:
             delta = self.end - now
             hours_left = delta.seconds // 3600
@@ -97,7 +97,7 @@ class hashcode(commands.Cog, name="hashcode"):
             cancelled = False
             await ctx.author.trigger_typing()
             try:
-                sent_initial_message = await ctx.author.send("Hello To checkin fonctionality please provide us your key ")
+                sent_initial_message = await ctx.author.send("Hello there! :sunglasses: \n You're finally checking in? Great! :heart_eyes: all you need to do is provide us with your team's code :hash:")
                 response = await self.bot.wait_for('message',timeout=120, check=message_check(channel=ctx.author.dm_channel))
             except asyncio.TimeoutError: 
                 await ctx.author.send("you took too long to provide the requested information.")
@@ -119,13 +119,13 @@ class hashcode(commands.Cog, name="hashcode"):
                         team_role = get(guild.roles, name=f"hashcode_{TeamName}_member")
                         if team_role:
                             if team_role in ctx.author.roles:
-                                await ctx.author.send(embed=Error("You have already joined your space"))
+                                await ctx.author.send(embed=Error("Hey again :face_with_monocle:  You have already joined your team's workspace :grin:"))
                             else:
                                 await ctx.author.add_roles(team_role)
-                                await ctx.author.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
+                                await ctx.author.send("SUCCESS!! :white_check_mark:  Welcome abroad to the GDG Algiers hub, HashCoder :sunglasses: You've got this!! :muscle:")
                                 #sending logs to logs channel 
                                 log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
-                                await log_channel.send(f" {ctx.author.mention} has joined {TeamName}_team .")
+                                await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
                                 users[user_id]={
                                     "lastactive" : time.time()
                                 }
@@ -145,15 +145,15 @@ class hashcode(commands.Cog, name="hashcode"):
                                 print(f"Bot Error: {errors}")
                             finally:
                                 await ctx.author.add_roles(role)
-                                await ctx.author.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
+                                await ctx.author.send("SUCCESS!! :white_check_mark:  Welcome abroad to the GDG Algiers hub, HashCoder :sunglasses: You've got this!! :muscle:")
                                 #sending logs to logs channel 
                                 log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
-                                await log_channel.send(f" {ctx.author.mention} has joined {TeamName}_team .")
+                                await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
                                 users[user_id]={
                                     "lastactive" : time.time()
                                 }
                     else:
-                        await ctx.author.send(embed=Error("Wrong UUID !"))
+                        await ctx.author.send(embed=Error("YOU Provided Wrong TEAM CODE !"))
                     
                 
     @commands.command(name="clear")
@@ -206,7 +206,7 @@ class hashcode(commands.Cog, name="hashcode"):
                                     await ctx.author.send(embed=Error("The member has already joined the workspace"))
                                 else:
                                     await member.add_roles(team_role)
-                                    await member.send(":white_check_mark: WELCOME TO GDG ALGIERS HUB")
+                                    await member.send("SUCCESS!! :white_check_mark:  Welcome abroad to the GDG Algiers hub, HashCoder :sunglasses: You've got this!! :muscle:")
                                     await ctx.author.send(":white_check_mark: MEMBER INVITED !")
                                     log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
                                     await log_channel.send(f" {member.mention} has joined {TeamName}_team .")
