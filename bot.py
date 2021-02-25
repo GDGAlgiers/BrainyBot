@@ -281,7 +281,7 @@ if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START
 
 # run this function to launch the background job
 keep_alive()
-
+print(config.HASHCODE_START_DATE)
 
 # Run the bot with the token
 bot.run(config.TOKEN)
