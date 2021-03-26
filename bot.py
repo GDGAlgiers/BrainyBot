@@ -220,61 +220,6 @@ async def on_command_error(context, error):
         
 
 
-######################### HashCOde Timer ###############################################
-
-
-message_sent = False 
-
-@tasks.loop(seconds=1.0)
-async def timer():
-    curr = datetime.datetime.now
-    await bot.wait_until_ready()
-    channel = bot.get_channel(config.HASHCODE_GENERAL_CHANNEL_ID)
-    global message_sent
-    if config.HASHCODE_START_DATE.hour == curr().hour and config.HASHCODE_START_DATE.minute ==curr().minute and curr().second == 57:
-      if not message_sent:
-        await channel.send('3')
-        time.sleep(1)
-        await channel.send('2')
-        time.sleep(1)
-        await channel.send('1')
-        time.sleep(1)
-        await channel.send('***GOO***')
-        message_sent = True
-    
-
-    
-    lasth =config.HASHCODE_END_DATE.hour-curr().hour
-    lastm =config.HASHCODE_END_DATE.minute-curr().minute
-    lasts =config.HASHCODE_END_DATE.second-curr().second
-    if lasth == 1:
-      if lastm == 0 and lasts == 0:
-       await channel.send("1 hour left :hourglass_flowing_sand:")
-      elif lastm == -30 and lasts == 0:
-        await channel.send("30 minutes left :hourglass:")
-    elif lastm==30 and lasts==0 and lasth == 0:
-      await channel.send("30 minutes left :hourglass:")
-    elif lastm==1 and lasth == 0:
-      lasts =(60+ config.HASHCODE_END_DATE.second)-curr().second
-      if lasts == 10:
-        for i in range(10,0,-1):
-          await channel.send(str(i)+" seconds :hourglass:")
-          time.sleep(1)
-        await channel.send("**TIME OVER** :alarm_clock:")
-    elif lasth == 0 and lastm == 0:
-      if lasts == 10:
-        for i in range(10,0,-1):
-          await channel.send(str(i)+" seconds :hourglass:")
-          time.sleep(1)
-        await channel.send("**TIME OVER** :alarm_clock:")
-    #print(lasth)
-    #print(lastm)
-    #print(lasts)
-
-dt = datetime.datetime.now()
-
-if (dt.year==config.HASHCODE_START_DATE.year and dt.month==config.HASHCODE_START_DATE.month and dt.day==config.HASHCODE_START_DATE.day and dt.hour <= config.HASHCODE_END_DATE.hour ):
-    timer.start()
 
 
 ######################### HashCOde Timer ###############################################
