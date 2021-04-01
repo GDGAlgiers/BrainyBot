@@ -3,7 +3,9 @@
 """
 import os
 import sys
+import random
 import json
+import csv
 import discord
 from discord.ext import commands
 if not os.path.isfile("config.py"):
@@ -39,10 +41,14 @@ class Fun(commands.Cog, name="fun"):
         """Get an advice from a wise bot :) """
 
         await ctx.trigger_typing()
-        async with self.bot.session.get("https://api.adviceslip.com/advice") as r:
-            res = await r.text()
-        json_res = json.loads(res)
-        await ctx.send(json_res["slip"]["advice"])
+        with open("core/BrainyAdvice.csv", 'r') as dataset:
+            advices_list = list(csv.reader(dataset, delimiter=','))
+            advices_len = len(advices_list)
+            number = random.randint(0,advices_len)
+            advice = advices_list[number][0]
+            embed = discord.Embed(color=0x00FF00,title="Advice from a wise Bot :robot: ", description=advice)
+            embed.set_footer(text="Advice made by Israa ")
+            await ctx.send(embed=embed)
 
 
 def setup(bot):

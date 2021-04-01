@@ -1,4 +1,3 @@
-import datetime
 import os
 TOKEN = os.getenv("DISCORD_TOKEN")
 # Can be multiple prefixes, like this: ("!", "?")
