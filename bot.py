@@ -65,20 +65,6 @@ async def status_task():
 bot.remove_command("help")
 
 
-# This will load the cogs set in startup cogs !!
-# with this  we can specify the commands that we need and the one we don't !
-if __name__ == "__main__":
-    for extension in config.STARTUP_COGS:
-        try:
-            bot.load_extension(extension)
-            extension = extension.replace("cogs.", "")
-            print(f"Loaded extension '{extension}'")
-        except Exception as e:
-            exception = f"{type(e).__name__}: {e}"
-            extension = extension.replace("cogs.", "")
-            print(f"Failed to load extension {extension}\n{exception}")
-
-
 
 @bot.event
 async def on_raw_reaction_add(payload):
@@ -225,11 +211,23 @@ async def on_command_error(context, error):
 
 
 
-######################### HashCOde Timer ###############################################
+# This will load the cogs set in startup cogs !!
+# with this  we can specify the commands that we need and the one we don't !
+if __name__ == "__main__":
+    for extension in config.STARTUP_COGS:
+        try:
+            bot.load_extension(extension)
+            extension = extension.replace("cogs.", "")
+            print(f"Loaded extension '{extension}'")
+        except Exception as e:
+            exception = f"{type(e).__name__}: {e}"
+            extension = extension.replace("cogs.", "")
+            print(f"Failed to load extension {extension}\n{exception}")
 
-# run this function to launch the background job
-keep_alive()
+        
+    # run this function to launch the background job
+    keep_alive()
 
-print(config.TOKEN)
-# Run the bot with the token
-bot.run(config.TOKEN)
+    print(config.TOKEN)
+    # Run the bot with the token
+    bot.run(config.TOKEN)
