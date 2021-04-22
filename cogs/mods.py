@@ -4,11 +4,13 @@ import asyncio
 import os
 import sys
 from pathlib import Path
+from datetime import datetime, timedelta
 
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
     import config
+
 
 class mod(commands.Cog, name="mod"):
     '''Commands for moderators in a guild.'''
@@ -16,18 +18,36 @@ class mod(commands.Cog, name="mod"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.has_role(config.MODERATOR_ROLE)     
+    @commands.has_role(config.MODERATOR_ROLE)
     @commands.command(name="announce")
-    async def announce(self, ctx, *, content: str=None):
+    async def announce(self, ctx, date: str = None, time: str = None, *, content: str = None):
+        # async def announce(self, ctx, *, content: str = None):
         """
-            Announce a message in a specific channel 
+            Announce a message in a specific channel
         """
+
         def check(message):
-                return message.author.id == ctx.message.author.id and message.content != ""
-        sent_initial_message = await ctx.send("This command will allow you to post a message by Brainy , Please provide the required information once requested. If you would like to abort the creation, do not respond and the program will time out.")
-        rl_object = {}
-        cancelled = False
-        if cancelled==False:
+            return message.author.id == ctx.message.author.id and message.content != ""
+
+        # Get argument, convert them, Handling possible errors
+        scheduled = False
+        try:
+            if date != None and time != None:
+                # date format : year-month-day
+                # time format : hour:minutes (doesn't work with AM,PM)
+                postingTime = datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M')
+                if postingTime < datetime.now():
+                    raise ValueError
+                scheduled = True
+            sent_initial_message = await ctx.send(
+                "This command will allow you to post a message by Brainy , Please provide the required information once requested. If you would like to abort the creation, do not respond and the program will time out.")
+            rl_object = {}
+            cancelled = False
+        except ValueError:
+            await ctx.send("invalid arguments, try again.")
+            cancelled = True
+
+        if cancelled == False:
             error_messages = []
             user_messages = []
             sent_channel_message = await ctx.send("Mention the #channel where to announce the  message.")
@@ -39,8 +59,9 @@ class mod(commands.Cog, name="mod"):
                         break
                     else:
                         error_messages.append((await ctx.send("The channel you mentioned is invalid.")))
-            except asyncio.TimeoutError: 
-                await ctx.author.send("Message announcement creation failed, you took too long to provide the requested information.")
+            except asyncio.TimeoutError:
+                await ctx.author.send(
+                    "Message announcement creation failed, you took too long to provide the requested information.")
                 cancelled = True
             finally:
                 await sent_channel_message.delete()
@@ -68,7 +89,7 @@ class mod(commands.Cog, name="mod"):
             try:
                 while True:
                     message_message = await self.bot.wait_for('message', timeout=120, check=check)
-                    # I would usually end up deleting message_message in the end but users usually want to be able to access the 
+                    # I would usually end up deleting message_message in the end but users usually want to be able to access the
                     # format they once used incase they want to make any minor changes
                     msg_values = message_message.content.split(" // ")
                     # This whole system could also be re-done using wait_for to make the syntax easier for the user
@@ -85,31 +106,43 @@ class mod(commands.Cog, name="mod"):
                         if len(msg_values) > 2 and msg_values[2].lower() != "none":
                             selector_embed.description = msg_values[2]
                         if len(msg_values) > 3 and msg_values[3].lower() != "none":
-                            selector_embed.color = int(msg_values[3], 16) 
+                            selector_embed.color = int(msg_values[3], 16)
                     print(selector_embed)
                     # Prevent sending an empty embed instead of removing it
                     selector_embed = (
                         selector_embed
-                        if selector_embed.title or selector_embed.description 
+                        if selector_embed.title or selector_embed.description
                         else None
                     )
+                    imageFile = None
                     if selector_msg_body or selector_embed:
                         target_channel = rl_object["target_channel"]
                         sent_final_message = None
-                        
+
                         try:
-                            if len(message_message.attachments)>0:
+                            if len(message_message.attachments) > 0:
                                 if message_message.attachments[0]:
                                     attachment = Path(message_message.attachments[0].filename)
                                     if attachment.suffix in validfiles:
-                                        imageurl = message_message.attachments[0].url
-                                        selector_embed.set_image(url=imageurl)
+                                        if not selector_embed == None:
+                                            # send image within embed
+                                            imageurl = message_message.attachments[0].url
+                                            selector_embed.set_image(url=imageurl)
+                                        else:
+                                            # send Image without embed
+                                            imageFile = await message_message.attachments[0].to_file()
                                     else:
                                         await message_message.delete()
+                            if scheduled:
+                                # wait until postTime come to post
+                                timeToSleep = postingTime - datetime.now()
+                                await asyncio.sleep(timeToSleep.total_seconds())
                             sent_final_message = await target_channel.send(
-                                    content=selector_msg_body, embed=selector_embed
+                                content=selector_msg_body, file=imageFile, embed=selector_embed
                             )
-                            rl_object["message"] = dict(message_id=sent_final_message.id, channel_id=sent_final_message.channel.id, guild_id=sent_final_message.guild.id)
+                            rl_object["message"] = dict(message_id=sent_final_message.id,
+                                                        channel_id=sent_final_message.channel.id,
+                                                        guild_id=sent_final_message.guild.id)
                             final_message = sent_final_message
                             break
                         except discord.Forbidden:
@@ -118,11 +151,14 @@ class mod(commands.Cog, name="mod"):
                                 f" the channel {target_channel.mention}. Please check my permissions and try again."
                             )))
             except asyncio.TimeoutError:
-                await ctx.author.send("Message  Anouncement creation failed, you took too long to provide the requested information.")
+                await ctx.author.send(
+                    "Message  Anouncement creation failed, you took too long to provide the requested information.")
                 cancelled = True
             finally:
                 await sent_message_message.delete()
                 for message in error_messages:
                     await message.delete()
+
+
 def setup(bot):
     bot.add_cog(mod(bot))
