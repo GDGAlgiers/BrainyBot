@@ -63,20 +63,6 @@ async def status_task():
 # Removes the default help command of discord.py to be able to create our custom help command.
 bot.remove_command("help")
 
-
-# This will load the cogs set in startup cogs !!
-# with this  we can specify the commands that we need and the one we don't !
-if __name__ == "__main__":
-    for extension in config.STARTUP_COGS:
-        try:
-            bot.load_extension(extension)
-            extension = extension.replace("cogs.", "")
-            print(f"Loaded extension '{extension}'")
-        except Exception as e:
-            exception = f"{type(e).__name__}: {e}"
-            extension = extension.replace("cogs.", "")
-            print(f"Failed to load extension {extension}\n{exception}")
-
 # The code in this event is executed every time a command has been *successfully* executed
 @bot.event
 async def on_command_completion(ctx):
@@ -119,10 +105,20 @@ async def on_command_error(context, error):
         
 
 
-
-# run this function to launch the background job
-keep_alive()
-
-print(config.TOKEN)
-# Run the bot with the token
-bot.run(config.TOKEN)
+# This will load the cogs set in startup cogs !!
+# with this  we can specify the commands that we need and the one we don't !
+if __name__ == "__main__":
+    for extension in config.STARTUP_COGS:
+        try:
+            bot.load_extension(extension)
+            extension = extension.replace("cogs.", "")
+            print(f"Loaded extension '{extension}'")
+        except Exception as e:
+            exception = f"{type(e).__name__}: {e}"
+            extension = extension.replace("cogs.", "")
+            print(f"Failed to load extension {extension}\n{exception}")
+    # run this function to launch the background job
+    keep_alive()
+    print(config.TOKEN)
+    # Run the bot with the token
+    bot.run(config.TOKEN)

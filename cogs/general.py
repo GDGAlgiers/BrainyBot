@@ -6,6 +6,7 @@ import os
 import sys
 import discord
 from discord.ext import commands
+from json import loads,dumps
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
@@ -112,6 +113,50 @@ class general(commands.Cog, name="general"):
         await embed_message.add_reaction("👎")
         await embed_message.add_reaction("🤷")
 
+    @commands.dm_only()
+    @commands.command(name="isSpotOpen")
+    async def isSpotOpen(self, context):
+        """
+        know if the spot is open or not
+        """
+        if loads(open('spot.json','r').read().strip())['spot']:
+            sit="Open"
+        else:
+            sit="Close"
+        embed = discord.Embed(
+                description=f"Currently, the spot is {sit}.",
+                color=0x00FF00
+            )
+        await context.send(embed=embed)
+
+    @commands.dm_only()
+    @commands.command(name="spot")
+    async def spot(self, context):
+        """
+        open the spot and close it
+        """
+        if context.message.author.id not in config.COMANAGERS_IDs:
+            embed = discord.Embed(
+                    description=f"You're not allowed to do that",
+                    color=0x00FF00
+                )
+            await context.send(embed=embed)
+        else:
+            dict=loads(open('spot.json','r').read().strip())
+            with open('spot.json','w+') as f:
+                if dict["spot"]:
+                    dict["spot"]=False
+                    sit="Closed"
+                    f.write(dumps(dict))
+                else:
+                    dict["spot"]=True
+                    sit="Open"
+                    f.write(dumps(dict))
+            embed = discord.Embed(
+                    description=f"Now, the spot became {sit}.",
+                    color=0x00FF00
+                )
+            await context.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(general(bot))
