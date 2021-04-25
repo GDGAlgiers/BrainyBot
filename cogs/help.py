@@ -12,6 +12,7 @@ else:
     import config
 
 
+
 class Help(commands.Cog, name="help"):
     def __init__(self, bot):
         self.bot = bot
