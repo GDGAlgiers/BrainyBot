@@ -69,6 +69,7 @@ class owner(commands.Cog, name="owner"):
                 color=0x00FF00
             )
             await context.send(embed=embed)
+    
     @commands.command(name="new", aliases=['create'])
     async def new(self, ctx):
         """

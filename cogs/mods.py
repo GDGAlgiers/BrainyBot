@@ -124,5 +124,8 @@ class mod(commands.Cog, name="mod"):
                 await sent_message_message.delete()
                 for message in error_messages:
                     await message.delete()
+
+
+
 def setup(bot):
     bot.add_cog(mod(bot))
