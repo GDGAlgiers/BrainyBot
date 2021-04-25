@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "brainybot-305214",
+    "private_key_id": "cf60bb69488d0d1280251bf8c3465c3479a1e61c",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCgQC9yzSAByUr2\nbFFYOof0rTfM2CAb/aruNFwkTbzXAT66KF2JhNcNEyTsk5vNxHhk8LUf6vsktLgk\nrk32d+soLev3dvYPVhucF5mYWosaDt5Xf5vDNnUbWXcsH5Dhh1WWoBNhgCKjxSH8\ne1XNevingU88eCHAgiZJARu0iG5cmIYZQogCi1+QFF6D06st4g9BWuoRKiRrFc+H\nbmnx21bYzsSA5VKnAedWCyrS5e5DRInNh573P/XePbOknqAVT1xD345SzKvVLC0C\nAneRo8m2pa5qh3QSXSJqAHblX2gdjrCCkVMIdL5VhQSf++B76Vo3KCyauPWm4vU0\nQCYOmG+vAgMBAAECggEALjckl/qxauJ3FIdblFLZB8b260Q/SmNHawg9tJiYx/cL\ndJuUkkb10Eb/pJzTV638PLwwuEJH6KeX3bhJMrYV4xIPVeCAiR6/uq4RtV8Tc9Hq\n7JgYP13Suy77kAWQfoJNvDFxNXLDSrDdItgdADQhRwmjZOCOd1rxmKdRqqiYD2rW\nccrPK8olRxqcqX+Xi/2I6HNkRHvNhlS0sLCZtQrAueFPUMUmBpGNAC7TbE9+Zc8L\nRDHsLYKhtX2I++yzIRnRj6iWVZbjMXswr7463QZQMhommVRKVOdWlmw/LukPVkV0\ndTAzWTQcCMg5nSZ0/Bn2eZDkfbB5y0izaV8OZ0MlcQKBgQDVUSIQBvwFYDnWg1jn\nwrL7IagD8UuffaverCez9IAK0H3FqFxZJju8gwA31lrG9lrqW/MHs4jvVqlK03H9\ny07Br2dDG9nFlZrM6UO8V0DejQjZuijtYh2+CjjEHenpyd50NXS7gWTvKuOW0mi2\nS6sqbyx/WJYxU0sCQUlJ/FvBvwKBgQDAUM8So/gsVAhlgJMFaejboSJF+YKJo5zl\nOR93fi4U2ZSIdv52oA+lWIb9Q9fy273I35gRGWd2IrWs5JMT8dPe29In2OYW0jJZ\n0dOaJ8tFJbh6u48ACDQ8+5z09ngSA03PfRWmWMDXRkIRyFh+lYs2viNSNBxeBv32\n47vbB9/uEQKBgQCJoxXlXXxTQ6lN/eXpdDjjzO2JzbFLsVyqCk570HCliaz9Ugp0\nAzVcBvKnFInyApbazIVdHLxoIXSOMSxF415nnnN0W44B7Ou692+bIHlcn4dsZK9v\nq3UhX5sM/3gkPvpn5O3y5iRoJTY/5Hdn2B8S/DSr3k7aeLHXPKS7NjdGJQKBgQCo\nv7+TmbFQJERh3Fola/NZlKBgSjnS0HABawhDb8K7pNgCjndmW7ie23lHjlpUzaBQ\nPHJQvrvcG0TS+pZb79x7NuPG9zmeWL65tbY5FCX2/MxNVXp7CrfbsuTcxdBB7gg+\nwoFWv5Ymz4110Rhlqo7HcDvKC9PAZd4+30GdReGmIQKBgH9kEoE8/uXnxw9bbywN\nPzbRazgHtRdUgSdmrq+CMcGAWto4mEhqQDlOMZ2anF6isYof9aZElH/jLOshH8pC\nGOlUk42dybsZOEd60Rhqbyu5amopu6T7WYuWyQOmvt7OcWZLkTYk46NF9+VaEsMv\nu9ZBOKKhX9IBpKeKYBPLpJ7O\n-----END PRIVATE KEY-----\n",
+    "client_email": "brainy-hashcode-spreadsheet@brainybot-305214.iam.gserviceaccount.com",
+    "client_id": "112617498817092429691",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/brainy-hashcode-spreadsheet%40brainybot-305214.iam.gserviceaccount.com"
+}

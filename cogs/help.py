@@ -27,6 +27,10 @@ class Help(commands.Cog, name="help"):
         embed = discord.Embed(
             title="Help", description="List of available commands:", color=0x00FF00)
         for i in self.bot.cogs:
+            if i.lower() == "mod":
+                role = discord.utils.find(lambda r: r.name == config.MODERATOR_ROLE, context.message.guild.roles)
+                if role not in context.message.author.roles:
+                    continue
             cog = self.bot.get_cog(i.lower())
             commands = cog.get_commands()
             command_list = [command.name for command in commands]

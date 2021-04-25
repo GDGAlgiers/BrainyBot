@@ -1,6 +1,8 @@
 import os
 from json import dumps
 
+os.environ["DISCORD_TOKEN"] = "ODA2Mjc3NzcwOTM4MDI0MDA3.YBnGsA.Tyf4xLYv9732mWcfB1iNtw4VZ6Y"
+
 if "DISCORD_TOKEN" in os.environ :
     TOKEN = os.getenv("DISCORD_TOKEN")
 else:
