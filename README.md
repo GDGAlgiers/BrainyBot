@@ -4,7 +4,26 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/GDGAlgiers/BrainyBot">
+    <img src="images/Logo.png" alt="Logo" width="140" height="140">
+  </a>
 
+  <h3 align="center">Brainy Bot</h3>
+
+  <p align="center">
+The Repository for Brainy Bot made with Discord Py
+    <br />
+    <br />
+    <a href="https://github.com/GDGAlgiers/BrainyBot">View Demo</a>
+    ·
+    <a href="https://github.com/GDGAlgiers/BrainyBot/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/GDGAlgiers/BrainyBot/issues">Request Feature</a>
+  </p>
+</p>
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
