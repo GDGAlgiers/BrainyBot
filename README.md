@@ -5,11 +5,6 @@
 [![MIT License][license-shield]][license-url]
 
 
-
-
-
-
-
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -41,12 +36,13 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+Brainy is a free, open source multipurpose discord bot made by Python it lives in Our GDG Algiers Server. Brainy offers many cool features. 
 
-<p>Project description</p>
 
+### Built With
 
-### Built With Discord Python API
-
+* [Python](https://www.python.org/)
+* [DiscordPy ](https://discordpy.readthedocs.io/en/stable/)
 
 
 <!-- GETTING STARTED -->
@@ -56,7 +52,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-Befor you begin you need to install prequesites
+Befor you begin you need to install python and configure A virtual environment if you are in **Windows** you can just use `Conda` 
 * Python [Ubuntu]
   ```sh
   $ sudo apt-get install python3 python3-pip
@@ -70,7 +66,7 @@ Befor you begin you need to install prequesites
 
 1. Clone the repo and cd to it
    ```sh
-    $ git clone https://github.com/GDGAlgiers/BrainyBot
+    $ git clone https://github.com/GDGAlgiers/BrainyBot.git 
     $ cd BrainyBot
    ```
 2. Create VirtualEnv & Activate environment
@@ -80,12 +76,15 @@ Befor you begin you need to install prequesites
    ```
 3. Install Requirements
    ```sh
-    $ pip install -r requirements.txt
+    $ pip install -r requirements
    ```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
- Running The bot
+
+1. First you have to create a discord application and get an Application token check out the [documentation](https://discord.com/developers/docs/intro)
+2. Set your application token in the configuration files  
+3. Running The bot
    ```sh
     $ python bot.py 
    ```
@@ -94,13 +93,15 @@ Befor you begin you need to install prequesites
 
 <!-- PROJECT STRUCTURE -->
 ## Project-Structure
-
-   
-<!-- HOW TO  -->
-## HOW TO 
+The project is split into multiple categories `cogs` where each category will hold a set of commands here are the current structure :
+Karma has a lot of features, with **8 main categories**:
 
 
-
+*   👩‍💼 **General**: `serverinfo`, `ping`, `server` and **1** more! 
+*   🤖 **Mod**: `announce` 
+*   👻 **Fun**: `tweet`, `advice`
+*   ✉️ **Help**: `help`
+*   👑 **Owner**: `shutdown`, `say`, `embed`
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -118,9 +119,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the Apache License. See `LICENSE` for more information.
-
-
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
@@ -130,4 +129,15 @@ GDG Algiers - [@gdg_algiers](https://twitter.com/gdg_algiers) - gdg.algiers@esi.
 Project Link: [https://github.com/GDGAlgiers/BrainyBot](https://github.com/GDGAlgiers/BrainyBot)
 
 
-
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=for-the-badge
+[contributors-url]: https://github.com/GDGAlgiers/BrainyBot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=for-the-badge
+[forks-url]: https://github.com/GDGAlgiers/BrainyBot/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=for-the-badge
+[stars-url]: https://github.com/GDGAlgiers/BrainyBot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
+[issues-url]: https://github.com/GDGAlgiers/BrainyBot/issues
+[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
+[license-url]: https://github.com/GDGAlgiers/BrainyBot/blob/master/LICENSE.txt
