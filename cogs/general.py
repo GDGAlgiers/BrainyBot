@@ -7,10 +7,12 @@ import sys
 import discord
 from discord.ext import commands
 from json import loads,dumps
+from core.utils import send_embed
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
     import config
+
 
 
 # This will define a cog named general
@@ -123,11 +125,8 @@ class general(commands.Cog, name="general"):
             sit="Open"
         else:
             sit="Close"
-        embed = discord.Embed(
-                description=f"Currently, the spot is {sit}.",
-                color=0x00FF00
-            )
-        await context.send(embed=embed)
+
+        await send_embed("",f"Currently, the spot is {sit}.")
 
     @commands.dm_only()
     @commands.command(name="spot")
@@ -136,11 +135,7 @@ class general(commands.Cog, name="general"):
         open the spot and close it
         """
         if context.message.author.id not in config.COMANAGERS_IDs:
-            embed = discord.Embed(
-                    description=f"You're not allowed to do that",
-                    color=0x00FF00
-                )
-            await context.send(embed=embed)
+            await send_embed("","You are not allowed !")
         else:
             dict=loads(open('spot.json','r').read().strip())
             with open('spot.json','w+') as f:
@@ -152,11 +147,8 @@ class general(commands.Cog, name="general"):
                     dict["spot"]=True
                     sit="Open"
                     f.write(dumps(dict))
-            embed = discord.Embed(
-                    description=f"Now, the spot became {sit}.",
-                    color=0x00FF00
-                )
-            await context.send(embed=embed)
+            await send_embed("",f"Now, the spot became {sit}.")
+
 
 def setup(bot):
     bot.add_cog(general(bot))

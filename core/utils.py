@@ -1,5 +1,6 @@
 import discord
 from collections.abc import Sequence
+import config
 
 async def getchannel(bot,id):
     channel = bot.get_channel(id)
@@ -11,7 +12,6 @@ async def getchannel(bot,id):
         except discord.HTTPException:
             channel = None
     return channel
-
 
 async def getuser(bot,id):
     user = bot.get_user(id)
@@ -28,7 +28,6 @@ async def getguild(bot,id):
         guild = await bot.fetch_guild(id)
 
     return guild
-
 
 def make_sequence(seq):
     if seq is None:
@@ -56,3 +55,13 @@ def message_check(channel=None, author=None, content=None, ignore_bot=True, lowe
             return False
         return True
     return check
+
+async def send_embed(title, description, color =  config.EMBED_COLOR):
+    embed = discord.Embed(
+                title=title 
+                description=title,
+                color=color
+            )
+    await context.send(embed=embed)
+
+    

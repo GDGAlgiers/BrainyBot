@@ -24,10 +24,14 @@ class mod(commands.Cog, name="mod"):
         """
         def check(message):
                 return message.author.id == ctx.message.author.id and message.content != ""
-        sent_initial_message = await ctx.send("This command will allow you to post a message by Brainy , Please provide the required information once requested. If you would like to abort the creation, do not respond and the program will time out.")
+        
+        sent_initial_message = await ctx.send('''This command will allow you to post a message by Brainy , \
+            Please provide the required information once requested. If you would like to abort the creation,  \
+            do not respond and the program will time out.''')
+
         rl_object = {}
         cancelled = False
-        if cancelled==False:
+        if not cancelled:
             error_messages = []
             user_messages = []
             sent_channel_message = await ctx.send("Mention the #channel where to announce the  message.")
@@ -39,16 +43,18 @@ class mod(commands.Cog, name="mod"):
                         break
                     else:
                         error_messages.append((await ctx.send("The channel you mentioned is invalid.")))
+        
             except asyncio.TimeoutError: 
                 await ctx.author.send("Message announcement creation failed, you took too long to provide the requested information.")
                 cancelled = True
+            
             finally:
                 await sent_channel_message.delete()
                 await sent_initial_message.delete()
                 for message in error_messages:
                     await message.delete()
 
-        if cancelled == False and 'target_channel' in rl_object:
+        if not cancelled  and 'target_channel' in rl_object:
             error_messages = []
             # Create a list of valid image formats for upload
             validfiles = [".jpg", ".jpeg", ".gif", ".png", ".bmp"]
@@ -112,14 +118,17 @@ class mod(commands.Cog, name="mod"):
                             rl_object["message"] = dict(message_id=sent_final_message.id, channel_id=sent_final_message.channel.id, guild_id=sent_final_message.guild.id)
                             final_message = sent_final_message
                             break
+
                         except discord.Forbidden:
                             error_messages.append((await message.channel.send(
                                 "I don't have permission to send messages to"
                                 f" the channel {target_channel.mention}. Please check my permissions and try again."
                             )))
+
             except asyncio.TimeoutError:
                 await ctx.author.send("Message  Anouncement creation failed, you took too long to provide the requested information.")
                 cancelled = True
+            
             finally:
                 await sent_message_message.delete()
                 for message in error_messages:
