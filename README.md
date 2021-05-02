@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/GDGAlgiers/BrainyBot">
-    <img src="images/Logo.png" alt="Logo" width="140" height="140">
+    <img src="images/Brainy.jpg" alt="Brainy" width="140" height="140" >
   </a>
 
   <h3 align="center">Brainy Bot</h3>
