@@ -46,9 +46,7 @@ class Fun(commands.Cog, name="fun"):
             advices_len = len(advices_list)
             number = random.randint(0,advices_len)
             advice = advices_list[number][0]
-            embed = discord.Embed(color=0x00FF00,title="Advice from a wise Bot :robot: ", description=advice)
-            embed.set_footer(text="Advice made by Israa ")
-            await ctx.send(embed=embed)
+            await ctx.send(advice)
 
 
 def setup(bot):

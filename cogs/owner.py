@@ -2,7 +2,6 @@ import os
 import sys
 import discord
 import asyncio
-from core.db import  db
 from discord.ext import commands
 from core.utils import send_embed
 
