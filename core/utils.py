@@ -56,10 +56,10 @@ def message_check(channel=None, author=None, content=None, ignore_bot=True, lowe
         return True
     return check
 
-async def send_embed(title, description, color =  config.EMBED_COLOR):
+async def send_embed(context,title, description, color =  config.EMBED_COLOR):
     embed = discord.Embed(
-                title=title 
-                description=title,
+                title=title,
+                description=description,
                 color=color
             )
     await context.send(embed=embed)

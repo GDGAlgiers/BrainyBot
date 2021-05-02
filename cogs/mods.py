@@ -25,9 +25,9 @@ class mod(commands.Cog, name="mod"):
         def check(message):
                 return message.author.id == ctx.message.author.id and message.content != ""
         
-        sent_initial_message = await ctx.send('''This command will allow you to post a message by Brainy , \
-            Please provide the required information once requested. If you would like to abort the creation,  \
-            do not respond and the program will time out.''')
+        sent_initial_message = await ctx.send("This command will allow you to post a message by Brainy , "\
+            "Please provide the required information once requested. If you would like to abort the creation, "\
+            "do not respond and the program will time out.")
 
         rl_object = {}
         cancelled = False
@@ -35,24 +35,19 @@ class mod(commands.Cog, name="mod"):
             error_messages = []
             user_messages = []
             sent_channel_message = await ctx.send("Mention the #channel where to announce the  message.")
-            try:
-                while True:
-                    channel_message = await self.bot.wait_for('message', timeout=120, check=check)
-                    if channel_message.channel_mentions:
-                        rl_object["target_channel"] = channel_message.channel_mentions[0]
-                        break
-                    else:
-                        error_messages.append((await ctx.send("The channel you mentioned is invalid.")))
+
+            while True:
+                channel_message = await self.bot.wait_for('message', timeout=120, check=check)
+                if channel_message.channel_mentions:
+                    rl_object["target_channel"] = channel_message.channel_mentions[0]
+                    break
+                else:
+                    error_messages.append((await ctx.send("The channel you mentioned is invalid.")))
         
-            except asyncio.TimeoutError: 
-                await ctx.author.send("Message announcement creation failed, you took too long to provide the requested information.")
+
                 cancelled = True
             
-            finally:
-                await sent_channel_message.delete()
-                await sent_initial_message.delete()
-                for message in error_messages:
-                    await message.delete()
+
 
         if not cancelled  and 'target_channel' in rl_object:
             error_messages = []
@@ -129,10 +124,7 @@ class mod(commands.Cog, name="mod"):
                 await ctx.author.send("Message  Anouncement creation failed, you took too long to provide the requested information.")
                 cancelled = True
             
-            finally:
-                await sent_message_message.delete()
-                for message in error_messages:
-                    await message.delete()
+
 
 
 

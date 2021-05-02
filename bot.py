@@ -17,6 +17,8 @@ import time
 from discord.ext import commands,tasks
 from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
+from core.utils import send_embed
+from core.errors import AuthorizationError
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
@@ -94,28 +96,27 @@ async def on_command_completion(ctx):
 # The code in this event is executed every time a valid commands catches an error
 @bot.event
 async def on_command_error(context, error):
+    
     if isinstance(error, commands.CommandOnCooldown):
-        embed = discord.Embed(
-            title="Error!",
-            description="This command is on a %.2fs cooldown" % error.retry_after,
-            color=0x00FF00
-        )
-        await context.send(embed=embed)
+        await send_embed(context,"Error!","This command is on a %.2fs cooldown" % error.retry_after)
+
     elif isinstance(error, commands.errors.PrivateMessageOnly):
-        embed = discord.Embed(
-            title="DMs only",
-            description="This service is only available in direct messages",
-            colour=discord.Colour.gold()
-        )
-        await context.send(embed=embed)
+        await send_embed(context,"DMs only","This service is only available in direct messages",discord.Colour.gold())
+
     elif isinstance(error, commands.errors.MissingRequiredArgument):
-        embed = discord.Embed(
-            title="Missing Arguments",
-            description="you need to specify the UUID",
-            colour=discord.Colour.gold()
-        )
-        await context.send(embed=embed)
-    raise error
+        await send_embed(context,"Missing Arguments","you need to specify the UUID",discord.Colour.gold())
+    
+    elif isinstance(error,AuthorizationError):
+        await send_embed(context,"Error!","You don't have the permission to use this command.")
+
+    elif isinstance(error,asyncio.exceptions.TimeoutError):
+        await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
+    
+    else:
+        print("Uncaught error !")
+        print("Error type:", type(error))
+        print("Error message:", error)
+        await context.send(":x: Error")
         
 
 
@@ -123,6 +124,6 @@ async def on_command_error(context, error):
 # run this function to launch the background job
 keep_alive()
 
-    print(config.TOKEN)
-    # Run the bot with the token
-    bot.run(config.TOKEN)
+print(config.TOKEN)
+# Run the bot with the token
+bot.run(config.TOKEN)

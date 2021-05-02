@@ -1,15 +1,17 @@
 import os
-from json import dumps
+from json import dumps,loads
 
-os.environ["DISCORD_TOKEN"] = "ODA2Mjc3NzcwOTM4MDI0MDA3.YBnGsA.Tyf4xLYv9732mWcfB1iNtw4VZ6Y"
+configJson = loads(open("config.json","r").read())
+
+
+os.environ["DISCORD_TOKEN"] = configJson["DISCORD_TOKEN"]
 
 if "DISCORD_TOKEN" in os.environ :
     TOKEN = os.getenv("DISCORD_TOKEN")
 else:
     raise "Server token not found"
 
-with open('spot.json','w+') as f:
-    f.write(dumps(dict(spot=False)))
+
 
 # Can be multiple prefixes, like this: ("!", "?")
 BOT_PREFIX = ("$")
