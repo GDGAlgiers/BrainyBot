@@ -14,13 +14,17 @@ import platform
 import sys
 import datetime
 import time 
+from aiohttp import ClientSession
 from discord.ext import commands,tasks
 from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+from core.utils import send_embed,loads_to_object
+from core.errors import AuthorizationError
+
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
 
 
 
@@ -31,6 +35,7 @@ intents.messages = True
 intents.emojis = True
 
 bot = commands.Bot(command_prefix=config.BOT_PREFIX, intents=intents)
+bot.session = ClientSession()
 
 # The code in this even is executed when the bot is ready
 
@@ -51,15 +56,13 @@ async def status_task():
     while True:
         await bot.change_presence(activity=discord.Game("with you!"))
         await asyncio.sleep(60)
-        await bot.change_presence(activity=discord.Game("with Kero"))
-        await asyncio.sleep(60)
         await bot.change_presence(activity=discord.Game(f"{config.BOT_PREFIX} help"))
         await asyncio.sleep(60)
         await bot.change_presence(activity=discord.Game("with humans!"))
         await asyncio.sleep(60)
+
+
 # this is very important we will not use the default help command .
-
-
 # Removes the default help command of discord.py to be able to create our custom help command.
 bot.remove_command("help")
 
@@ -94,35 +97,46 @@ async def on_command_completion(ctx):
 # The code in this event is executed every time a valid commands catches an error
 @bot.event
 async def on_command_error(context, error):
+    # here we log the error
+    print("Error type:", type(error))
+
+    # then handle it !
     if isinstance(error, commands.CommandOnCooldown):
-        embed = discord.Embed(
-            title="Error!",
-            description="This command is on a %.2fs cooldown" % error.retry_after,
-            color=0x00FF00
-        )
-        await context.send(embed=embed)
+        await send_embed(context,"Error!","This command is on a %.2fs cooldown" % error.retry_after)
+
     elif isinstance(error, commands.errors.PrivateMessageOnly):
-        embed = discord.Embed(
-            title="DMs only",
-            description="This service is only available in direct messages",
-            colour=discord.Colour.gold()
-        )
-        await context.send(embed=embed)
+        await send_embed(context,"DMs only","This service is only available in direct messages",discord.Colour.gold())
+
     elif isinstance(error, commands.errors.MissingRequiredArgument):
-        embed = discord.Embed(
-            title="Missing Arguments",
-            description="you need to specify the UUID",
-            colour=discord.Colour.gold()
-        )
-        await context.send(embed=embed)
-    raise error
+        await send_embed(context,"Missing Arguments","you need to specify the UUID",discord.Colour.gold())
+    elif isinstance(error, discord.Forbidden):
+        await send_embed(context,"Permission Denied","I don't have permissions to post in that channel",discord.Colour.gold())
+    elif isinstance(error,AuthorizationError):
+        await send_embed(context,"Error!","You don't have the permission to use this command.")
+
+    elif isinstance(error,asyncio.exceptions.TimeoutError):
+        await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
+    else:
+        print("Uncaught error !")
+        print("Error type:", type(error))
+        print("Error message:", error)
+        await context.send(":x: Error")
         
 
-
+#  get the discord token 
+if "DISCORD_TOKEN" in os.environ :
+    TOKEN = os.getenv("DISCORD_TOKEN")
+else:
+    configJson = loads(open("config.json","r").read())
+    TOKEN = configJson["DISCORD_TOKEN"]
+    
+if TOKEN == None:
+    raise "Server token not found"
 
 # run this function to launch the background job
+# this function is very util when you run your bot on environment 
+# that kills your process
 keep_alive()
 
-print(config.TOKEN)
 # Run the bot with the token
-bot.run(config.TOKEN)
+bot.run(TOKEN)

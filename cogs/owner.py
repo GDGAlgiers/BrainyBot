@@ -3,11 +3,13 @@ import sys
 import discord
 import asyncio
 from discord.ext import commands
+from core.utils import send_embed,loads_to_object
+from core.errors import AuthorizationError
 
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
 
 
 class owner(commands.Cog, name="owner"):
@@ -20,20 +22,11 @@ class owner(commands.Cog, name="owner"):
         Make the bot shutdown
         """
         if context.message.author.id in config.OWNERS:
-            embed = discord.Embed(
-                description="Shutting down. Bye! :wave:",
-                color=0x00FF00
-            )
-            await context.send(embed=embed)
+            await send_embed(context,"","Shutting down. Bye! :wave:")
             await self.bot.logout()
             await self.bot.close()
         else:
-            embed = discord.Embed(
-                title="Error!",
-                description="You don't have the permission to use this command.",
-                color=0x00FF00
-            )
-            await context.send(embed=embed)
+            raise AuthorizationError()
 
     @commands.command(name="say", aliases=["echo"])
     async def say(self, context, *, args):
@@ -43,12 +36,7 @@ class owner(commands.Cog, name="owner"):
         if context.message.author.id in config.OWNERS:
             await context.send(args)
         else:
-            embed = discord.Embed(
-                title="Error!",
-                description="You don't have the permission to use this command.",
-                color=0x00FF00
-            )
-            await context.send(embed=embed)
+            raise AuthorizationError()
 
     @commands.command(name="embed")
     async def embed(self, context, *, args):
@@ -56,18 +44,9 @@ class owner(commands.Cog, name="owner"):
         The bot will say anything you want, but within embeds.
         """
         if context.message.author.id in config.OWNERS:
-            embed = discord.Embed(
-                description=args,
-                color=0x00FF00
-            )
-            await context.send(embed=embed)
+            await send_embed(context,"",args)
         else:
-            embed = discord.Embed(
-                title="Error!",
-                description="You don't have the permission to use this command.",
-                color=0x00FF00
-            )
-            await context.send(embed=embed)
+            raise AuthorizationError()
 
 def setup(bot):
     bot.add_cog(owner(bot))

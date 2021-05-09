@@ -6,10 +6,17 @@ import os
 import sys
 import discord
 from discord.ext import commands
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+from json import loads,dumps
+from core.utils import send_embed, loads_to_object
+from core.errors import *
+
+
+
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
+
 
 
 # This will define a cog named general
@@ -37,7 +44,7 @@ class general(commands.Cog, name="general"):
         embed = discord.Embed(
             title="**Server Name:**",
             description=f"{server}",
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.set_thumbnail(
             url=server.icon_url
@@ -73,7 +80,7 @@ class general(commands.Cog, name="general"):
         Check if the bot is alive.
         """
         embed = discord.Embed(
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.add_field(
             name="Pong!",
@@ -91,7 +98,7 @@ class general(commands.Cog, name="general"):
         Get the invite link of the discord server of the bot for some support.
         """
         await context.send("I sent you a private message!")
-        await context.author.send("Join my discord server by clicking here: https://discord.gg/zeTe8Um2Ca")
+        await context.author.send("Join my discord server by clicking here: https://www.gdgalgiers.com/discord")
 
     @commands.command(name="poll")
     async def poll(self, context, *args):
@@ -102,7 +109,7 @@ class general(commands.Cog, name="general"):
         embed = discord.Embed(
             title="A new poll has been created!",
             description=f"{poll_title}",
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.set_footer(
             text=f"Poll created by: {context.message.author} • React to vote!"
@@ -111,6 +118,41 @@ class general(commands.Cog, name="general"):
         await embed_message.add_reaction("👍")
         await embed_message.add_reaction("👎")
         await embed_message.add_reaction("🤷")
+
+    @commands.dm_only()
+    @commands.command(name="isSpotOpen")
+    async def isSpotOpen(self, context):
+        """
+        check if the GDG Algiers spot is open or not
+        """
+        if loads(open('config.json','r').read().strip())['spot']:
+            sit="Open"
+        else:
+            sit="Close"
+        await send_embed(context,"",f"Currently, the spot is {sit}.")
+
+    @commands.dm_only()
+    @commands.command(name="spot")
+    async def spot(self, context):
+        """
+        open the spot if its closed or close it if opened
+        """
+        # if user is not a comanager he is not authorized
+        # only comanagers has keys to open spot 
+        if context.message.author.id not in config.COMANAGERS_IDs:
+            raise AuthorizationError()
+        else:
+            dict=loads(open('config.json','r').read().strip())
+            with open('config.json','w+') as f:
+                if dict["spot"]:
+                    dict["spot"]=False
+                    new_value="Closed"
+                    f.write(dumps(dict))
+                else:
+                    dict["spot"]=True
+                    new_value="Open"
+                    f.write(dumps(dict))
+            await send_embed(context,"",f"Now, the spot became {new_value}.")
 
 
 def setup(bot):

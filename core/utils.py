@@ -1,5 +1,28 @@
 import discord
 from collections.abc import Sequence
+import json
+import os
+from types import SimpleNamespace
+
+
+
+
+def loads_to_object(json_file):
+    """
+        Loads from a json file  to a python object filling its properties with 
+        dictionnary key 
+    """
+    return json.loads(open(json_file, "r").read(),object_hook=lambda d: SimpleNamespace(**d))
+
+
+
+
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
+else:
+    config = loads_to_object("config.json")
+
+
 
 async def getchannel(bot,id):
     channel = bot.get_channel(id)
@@ -11,7 +34,6 @@ async def getchannel(bot,id):
         except discord.HTTPException:
             channel = None
     return channel
-
 
 async def getuser(bot,id):
     user = bot.get_user(id)
@@ -30,29 +52,11 @@ async def getguild(bot,id):
     return guild
 
 
-def make_sequence(seq):
-    if seq is None:
-        return ()
-    if isinstance(seq, Sequence) and not isinstance(seq, str):
-        return seq
-    else:
-        return (seq,)
+async def send_embed(context,title, description, color =  config.EMBED_COLOR):
+    embed = discord.Embed(
+                title=title,
+                description=description,
+                color=int(color,16)
+            )
+    await context.send(embed=embed)
 
-def message_check(channel=None, author=None, content=None, ignore_bot=True, lower=True):
-    channel = make_sequence(channel)
-    author = make_sequence(author)
-    content = make_sequence(content)
-    if lower:
-        content = tuple(c.lower() for c in content)
-    def check(message):
-        if ignore_bot and message.author.bot:
-            return False
-        if channel and message.channel not in channel:
-            return False
-        if author and message.author not in author:
-            return False
-        actual_content = message.content.lower() if lower else message.content
-        if content and actual_content not in content:
-            return False
-        return True
-    return check
