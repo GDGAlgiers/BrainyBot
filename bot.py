@@ -14,6 +14,7 @@ import platform
 import sys
 import datetime
 import time 
+from aiohttp import ClientSession
 from discord.ext import commands,tasks
 from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
@@ -34,6 +35,7 @@ intents.messages = True
 intents.emojis = True
 
 bot = commands.Bot(command_prefix=config.BOT_PREFIX, intents=intents)
+bot.session = ClientSession()
 
 # The code in this even is executed when the bot is ready
 
@@ -107,7 +109,8 @@ async def on_command_error(context, error):
 
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await send_embed(context,"Missing Arguments","you need to specify the UUID",discord.Colour.gold())
-    
+    elif isinstance(error, discord.Forbidden):
+        await send_embed(context,"Permission Denied","I don't have permissions to post in that channel",discord.Colour.gold())
     elif isinstance(error,AuthorizationError):
         await send_embed(context,"Error!","You don't have the permission to use this command.")
 

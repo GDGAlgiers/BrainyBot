@@ -24,7 +24,9 @@ class Fun(commands.Cog, name="fun"):
     @commands.command(brief="Tweet as someone", description='You can tweet as someone else to troll others')
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def tweet(self, ctx, username: commands.clean_content(fix_channel_mentions=True), *, text: commands.clean_content(fix_channel_mentions=True)):
-        """ Tweet as someone else. """
+        """ Tweet as someone else.
+            $tweet @user text
+         """
 
         if len(text) > 65:
             text = text[:65]

@@ -27,7 +27,7 @@ class Help(commands.Cog, name="help"):
         prefix = config.BOT_PREFIX
 
         embed = discord.Embed(
-            title="Help", description="List of available commands:", color=0x00FF00)
+            title="Help", description="List of available commands:", color=int(config.EMBED_COLOR,16))
         # loop over all cogs
         for i in self.bot.cogs:
             # if the user is not an owner don't show owner commands

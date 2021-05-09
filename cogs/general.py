@@ -44,7 +44,7 @@ class general(commands.Cog, name="general"):
         embed = discord.Embed(
             title="**Server Name:**",
             description=f"{server}",
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.set_thumbnail(
             url=server.icon_url
@@ -80,7 +80,7 @@ class general(commands.Cog, name="general"):
         Check if the bot is alive.
         """
         embed = discord.Embed(
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.add_field(
             name="Pong!",
@@ -109,7 +109,7 @@ class general(commands.Cog, name="general"):
         embed = discord.Embed(
             title="A new poll has been created!",
             description=f"{poll_title}",
-            color=0x00FF00
+            color=int(config.EMBED_COLOR,16)
         )
         embed.set_footer(
             text=f"Poll created by: {context.message.author} • React to vote!"
