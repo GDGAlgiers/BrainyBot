@@ -112,7 +112,7 @@ Befor you begin you need to install python and configure A virtual environment i
 <!-- PROJECT STRUCTURE -->
 ## Project-Structure
 The project is split into multiple categories `cogs` where each category will hold a set of commands here are the current structure :
-Karma has a lot of features, with **8 main categories**:
+Karma has a lot of features, with **5 main categories**:
 
 
 *   👩‍💼 **General**: `serverinfo`, `ping`, `server` and **1** more! 
