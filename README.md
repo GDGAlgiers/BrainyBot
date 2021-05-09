@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/GDGAlgiers/BrainyBot">
-    <img src="images/Brainy.jpg" alt="Brainy" width="140" height="140" >
+    <img src="images/Brainy.jpg" alt="Brainy" width="280" height="280" >
   </a>
 
   <h3 align="center">Brainy Bot</h3>
@@ -149,13 +149,13 @@ Project Link: [https://github.com/GDGAlgiers/BrainyBot](https://github.com/GDGAl
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/GDGAlgiers/BrainyBot.svg?style=for-the-badge
 [contributors-url]: https://github.com/GDGAlgiers/BrainyBot/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/GDGAlgiers/BrainyBot.svg?style=for-the-badge
 [forks-url]: https://github.com/GDGAlgiers/BrainyBot/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/GDGAlgiers/BrainyBot.svg?style=for-the-badge
 [stars-url]: https://github.com/GDGAlgiers/BrainyBot/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/GDGAlgiers/BrainyBot.svg?style=for-the-badge
 [issues-url]: https://github.com/GDGAlgiers/BrainyBot/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/GDGAlgiers/BrainyBot.svg?style=for-the-badge
 [license-url]: https://github.com/GDGAlgiers/BrainyBot/blob/master/LICENSE.txt
