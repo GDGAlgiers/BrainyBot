@@ -1,6 +1,5 @@
 import os
 import sys
-import discord
 import asyncio
 from discord.ext import commands
 from core.utils import send_embed,loads_to_object
