@@ -52,11 +52,11 @@ async def getguild(bot,id):
     return guild
 
 
-async def send_embed(context,title, description, color =  config.EMBED_COLOR):
+async def send_embed(context,title, description, color =  int(config.EMBED_COLOR,16)):
     embed = discord.Embed(
                 title=title,
                 description=description,
-                color=int(color,16)
+                color=color
             )
     await context.send(embed=embed)
 
