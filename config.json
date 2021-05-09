@@ -1,4 +1,21 @@
 {
     "DISCORD_TOKEN": "",
-    "spot": false
+    "SPOT": false,
+    "BOT_PREFIX": "$",
+    "OWNERS": [
+        516805045199699969,
+        642097099802017793
+    ],
+    "STARTUP_COGS": [
+        "cogs.general",
+        "cogs.help",
+        "cogs.owner",
+        "cogs.mods",
+        "cogs.fun"
+    ],
+    "MODERATOR_ROLE": "mod",
+    "COMANAGERS_IDS": [
+        516805045199699969
+    ],
+    "EMBED_COLOR": "0x00FF00"
 }

@@ -3,13 +3,13 @@ import sys
 import discord
 import asyncio
 from discord.ext import commands
-from core.utils import send_embed
+from core.utils import send_embed,loads_to_object
 from core.errors import AuthorizationError
 
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
 
 
 class owner(commands.Cog, name="owner"):

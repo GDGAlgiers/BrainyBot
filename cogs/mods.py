@@ -4,17 +4,19 @@ import asyncio
 import os
 import sys
 from pathlib import Path
+from core.utils import loads_to_object
 
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
 
 class mod(commands.Cog, name="mod"):
     '''Commands for moderators in a guild.'''
 
     def __init__(self, bot):
         self.bot = bot
+
 
     @commands.has_role(config.MODERATOR_ROLE)     
     @commands.command(name="announce")
@@ -119,14 +121,6 @@ class mod(commands.Cog, name="mod"):
                                 "I don't have permission to send messages to"
                                 f" the channel {target_channel.mention}. Please check my permissions and try again."
                             )))
-
-            except asyncio.TimeoutError:
-                await ctx.author.send("Message  Anouncement creation failed, you took too long to provide the requested information.")
-                cancelled = True
             
-
-
-
-
 def setup(bot):
     bot.add_cog(mod(bot))

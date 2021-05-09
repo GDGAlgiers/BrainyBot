@@ -17,12 +17,13 @@ import time
 from discord.ext import commands,tasks
 from core.utils import getchannel,getuser,getguild
 from keep_alive import keep_alive
-from core.utils import send_embed
+from core.utils import send_embed,loads_to_object
 from core.errors import AuthorizationError
-if not os.path.isfile("config.py"):
-    sys.exit("'config.py' not found! Please add it and try again.")
+
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
 else:
-    import config
+    config = loads_to_object("config.json")
 
 
 
@@ -53,15 +54,13 @@ async def status_task():
     while True:
         await bot.change_presence(activity=discord.Game("with you!"))
         await asyncio.sleep(60)
-        await bot.change_presence(activity=discord.Game("with Kero"))
-        await asyncio.sleep(60)
         await bot.change_presence(activity=discord.Game(f"{config.BOT_PREFIX} help"))
         await asyncio.sleep(60)
         await bot.change_presence(activity=discord.Game("with humans!"))
         await asyncio.sleep(60)
+
+
 # this is very important we will not use the default help command .
-
-
 # Removes the default help command of discord.py to be able to create our custom help command.
 bot.remove_command("help")
 
@@ -96,7 +95,10 @@ async def on_command_completion(ctx):
 # The code in this event is executed every time a valid commands catches an error
 @bot.event
 async def on_command_error(context, error):
-    
+    # here we log the error
+    print("Error type:", type(error))
+
+    # then handle it !
     if isinstance(error, commands.CommandOnCooldown):
         await send_embed(context,"Error!","This command is on a %.2fs cooldown" % error.retry_after)
 
@@ -111,7 +113,6 @@ async def on_command_error(context, error):
 
     elif isinstance(error,asyncio.exceptions.TimeoutError):
         await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
-    
     else:
         print("Uncaught error !")
         print("Error type:", type(error))
@@ -119,11 +120,20 @@ async def on_command_error(context, error):
         await context.send(":x: Error")
         
 
-
+#  get the discord token 
+if "DISCORD_TOKEN" in os.environ :
+    TOKEN = os.getenv("DISCORD_TOKEN")
+else:
+    configJson = loads(open("config.json","r").read())
+    TOKEN = configJson["DISCORD_TOKEN"]
+    
+if TOKEN == None:
+    raise "Server token not found"
 
 # run this function to launch the background job
+# this function is very util when you run your bot on environment 
+# that kills your process
 keep_alive()
 
-print(config.TOKEN)
 # Run the bot with the token
-bot.run(config.TOKEN)
+bot.run(TOKEN)

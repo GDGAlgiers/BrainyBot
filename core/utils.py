@@ -1,6 +1,21 @@
 import discord
 from collections.abc import Sequence
-import config
+import json
+import os
+from types import SimpleNamespace
+
+
+
+
+def loads_to_object(json_file):
+    return json.loads(open(json_file, "r").read(),object_hook=lambda d: SimpleNamespace(**d))
+
+if not os.path.isfile("config.json"):
+    sys.exit("'config.json' not found! Please add it and try again.")
+else:
+    config = loads_to_object("config.json")
+
+
 
 async def getchannel(bot,id):
     channel = bot.get_channel(id)
@@ -63,5 +78,3 @@ async def send_embed(context,title, description, color =  config.EMBED_COLOR):
                 color=color
             )
     await context.send(embed=embed)
-
-    
