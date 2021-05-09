@@ -33,4 +33,3 @@ typing-extensions==3.7.4.3
 urllib3==1.26.3
 Werkzeug==1.0.1
 yarl==1.6.3
-json
