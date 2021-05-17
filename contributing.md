@@ -36,13 +36,13 @@ For changes that address core functionality or would require breaking changes (e
 In general, we follow the ["fork-and-pull" Git workflow](https://github.com/susam/gitpr)
 
 1. Fork the repository to your own Github account
-2. Clone the project to your machine
-3. Create a branch locally with a succinct but descriptive name
-4. Commit changes to the branch
+2. Clone the project to your machine (`git clone https://github.com/GDGAlgiers/BrainyBot`)
+3. Create a branch locally with a succinct but descriptive name (`git checkout -b feature/githubName/AmazingFeature`)
+4. Commit changes to the branch (`git commit -m 'Add some AmazingFeature'`)
 5. Following any formatting and testing guidelines specific to this repo
-6. Push changes to your fork
+6. Push changes to your fork (`git push origin feature/githubName/AmazingFeature`)
 7. Open a PR in our repository.
-
+8. 
 ## Getting Help
 
 Join us in the [GDG Algiers' Community Discord](https://www.gdgalgiers.com/discord/) and post your question there.
