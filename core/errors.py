@@ -5,4 +5,8 @@ class AuthorizationError(commands.errors.CheckFailure):
     pass
 
 
+class HackTheBotNotRegistered(commands.errors.CheckFailure):
+    pass
 
+class HackTheBotUnknownError(commands.errors.CheckFailure):
+    pass

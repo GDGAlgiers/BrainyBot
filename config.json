@@ -11,11 +11,14 @@
         "cogs.help",
         "cogs.owner",
         "cogs.mods",
-        "cogs.fun"
+        "cogs.fun",
+        "cogs.hackthebot"
     ],
+    "HACK_THE_BOT_URL":"http://localhost:8000",
     "MODERATOR_ROLE": "mod",
     "COMANAGERS_IDS": [
         516805045199699969
     ],
+    "HACK_THE_BOT_ROLE":"842454863446016021",
     "EMBED_COLOR": "0x00FF00"
 }
