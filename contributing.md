@@ -42,7 +42,7 @@ In general, we follow the ["fork-and-pull" Git workflow](https://github.com/susa
 5. Following any formatting and testing guidelines specific to this repo
 6. Push changes to your fork (`git push origin feature/githubName/AmazingFeature`)
 7. Open a PR in our repository.
-8. 
+
 ## Getting Help
 
 Join us in the [GDG Algiers' Community Discord](https://www.gdgalgiers.com/discord/) and post your question there.
