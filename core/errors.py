@@ -10,3 +10,5 @@ class HackTheBotNotRegistered(commands.errors.CheckFailure):
 
 class HackTheBotUnknownError(commands.errors.CheckFailure):
     pass
+class HackTheBotInvalidTeamName(commands.errors.CheckFailure):
+    pass

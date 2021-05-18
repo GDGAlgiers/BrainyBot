@@ -118,7 +118,8 @@ async def on_command_error(context, error):
         await send_embed(context,"Error!",":frowning2:  Sorry i got an unkown error , can you please report this to the admins :pray: ")
     elif isinstance(error,errors.HackTheBotNotRegistered):
         await send_embed(context,"Not Registered !","It seems that you still has **not registered** to Our Event :eyes:   **OR** you have already registered :white_check_mark:  but you **didn't confirm** :ok: \n if this is the case please confirm by clicking the **confirm button** in the confirmation email :ok:")
-
+    elif isinstance(error,errors.HackTheBotInvalidTeamName):
+        await send_embed(context,"Invalid Team Name","Sorry you have submitted a wrong team name ! ")
 
 
     elif isinstance(error,asyncio.exceptions.TimeoutError):
@@ -127,6 +128,7 @@ async def on_command_error(context, error):
         print("Uncaught error !")
         print("Error type:", type(error))
         print("Error message:", error)
+        raise error
         await context.send(":x: Error")
         
 
