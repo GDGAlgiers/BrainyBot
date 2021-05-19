@@ -104,10 +104,8 @@ async def on_command_error(context, error):
     # then handle it !
     if isinstance(error, commands.CommandOnCooldown):
         await send_embed(context,"Error!","This command is on a %.2fs cooldown" % error.retry_after)
-
     elif isinstance(error, commands.errors.PrivateMessageOnly):
         await send_embed(context,"DMs only","This service is only available in direct messages",discord.Colour.gold())
-
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await send_embed(context,"Missing Arguments","you need to specify the UUID",discord.Colour.gold())
     elif isinstance(error, discord.Forbidden):

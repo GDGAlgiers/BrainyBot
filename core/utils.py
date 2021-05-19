@@ -69,6 +69,6 @@ async def verify_api(discord_id):
     elif res["status"] =='UNKNOWN_ERROR':
         raise HackTheBotUnknownError()
     elif res["status"] =='SUCCESS':
-        return res["participant"]
+        return res["participant_id"]
     else:
         raise HackTheBotUnknownError()
