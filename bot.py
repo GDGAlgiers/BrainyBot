@@ -122,8 +122,8 @@ async def on_command_error(context, error):
     elif isinstance(error,commands.errors.CommandNotFound):
         await send_embed(context,"Invalid Command","Sorry I don't understand this command")
 
-    elif isinstance(error,asyncio.exceptions.TimeoutError):
-        await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
+#    elif isinstance(error,asyncio.exceptions.TimeoutError):
+#        await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
     else:
         print("Uncaught error !")
         print("Error type:", type(error))
