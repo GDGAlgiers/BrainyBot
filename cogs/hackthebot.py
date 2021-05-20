@@ -52,15 +52,15 @@ class hackthebot(commands.Cog, name="hackthebot"):
         await context.trigger_typing()
         participant_id = verify_api(user_id)
 
-        await context.send("This command will allow you to create a new , "\
-            "Please provide the required information once requested. If you would like to abort the creation, "\
-            "do not respond and the program will time out.")
+        await context.send("This command will allow you to create a new team :people_with_bunny_ears_partying:  , "\
+            "Please provide the required information once requested :blush:. If you would like to abort the creation, "\
+            "do not respond and I will move on.")
         time.sleep(1)
         await context.trigger_typing()
         data = {}
 
         ## get team name 
-        await context.send("Please give me the team Name ! Team Name must be AlphaNumeric only [a-zA-Z0-9]  and length <25")
+        await context.send("Please give me the your team name :blush: ! Team name must be alphanumeric only [a-zA-Z0-9]  and length less than 25")
         try:
             team_name_message = await self.bot.wait_for('message', timeout=120, check=lambda message: message.author.id == context.message.author.id and message.content != "" )
             team_name = team_name_message.content
@@ -76,7 +76,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         ## get team image 
         time.sleep(1)
         await context.trigger_typing()
-        await context.send("TNext Step i to pass in an image that represent your team this step is tottaly optional send NONE If You don't want to set image  ")
+        await context.send("The next step is to pass me an image :sunrise_over_mountains: that represents your team. This step is totally optional, send NONE if you don't want to set image  ")
         validfiles = [".jpg", ".jpeg", ".gif", ".png", ".bmp"]
         data["image"] = "https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/BrainyPdp.png?alt=media&token=69c27608-fbe9-4785-b845-5bc5f0de4830"
         try:
@@ -89,7 +89,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                         imageurl = team_image_message.attachments[0].url
                         data["image"]= imageurl
                     else:
-                        await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign: ")
+                        await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign:, we accept the following formats only :  .jpg , .jpeg , .gif , .png , .bmp")
                         return
                 else:
                     await send_embed(context, "Cancelled" ,"No Attachments have been sent !")
@@ -104,8 +104,8 @@ class hackthebot(commands.Cog, name="hackthebot"):
         response = r.json()
         if(response["status"] =="ALREADY_IN_A_TEAM"):
             embed = discord.Embed(
-                    title="Already have A team",
-                    description="You Already have a team :muscle:",
+                    title="Already have a team",
+                    description="You already have a team...Good luck with your hack :muscle:",
                     color=int(config.EMBED_COLOR,16)
             )
             await context.author.send(embed=embed)
@@ -113,7 +113,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         elif response["status"] =='TEAM_ALREADY_EXIST':
             embed = discord.Embed(
                     title="Team Already exist",
-                    description="Team Already exist with this name",
+                    description="Team Already exists with this name... be more creative :stuck_out_tongue:",
                     color=int(config.EMBED_COLOR,16)
             )
             await context.author.send(embed=embed)
@@ -122,7 +122,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             token = response["token"]
             embed = discord.Embed(
                     title="Team Created",
-                    description=f"Team was created successfully now your partners can join you using this key {token} using the join command ",
+                    description=f"Team was created successfully :star_struck:...now your partners can join you using this key {token} by sending me a dm with the `$joinTeam` command ",
                     color=int(config.EMBED_COLOR,16)
             )
             await context.author.send(embed=embed)
@@ -140,7 +140,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         member = find(lambda m:m.id == user_id,guild.members)
         if team_role:
             await member.add_roles(team_role)
-            await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad  :sunglasses: You've got this!! :muscle:")
+            await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad  :sunglasses: Good luck on the hack! :muscle:")
             #sending logs to logs channel 
             #log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
             #await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
@@ -161,7 +161,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                 print(f"Bot Error: {errors}")
             finally:
                 await member.add_roles(role)
-                await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad :sunglasses: You've got this!! :muscle:")
+                await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad :sunglasses: Good luck on the hack! :muscle:")
                 #sending logs to logs channel 
                 #log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
                 #await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
@@ -187,7 +187,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             permission = text_channel.overwrites.get(role,None)
             if(permission is not None and permission.read_messages is True and permission.send_messages is True):
                 embed = discord.Embed(
-                    title="CHECK YOUR CHANNEL",
+                    title="Check your channel",
                     description="A mentor should be there with you, if not please wait for them",
                     color=int(config.EMBED_COLOR,16)
                 )
@@ -205,8 +205,8 @@ class hackthebot(commands.Cog, name="hackthebot"):
             
                                                       send_messages=True)
                 embed = discord.Embed(
-                    title="HELP MENTOR",
-                    description="A mentor will be coming your way...stay tight",
+                    title="Help Mentor",
+                    description="A mentor will be coming your way...stay tight :star_struck:",
                     color=int(config.EMBED_COLOR,16)
                 )
                 await context.channel.send(embed=embed)                                          
@@ -215,7 +215,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                 team = parts[0]
                 embed = discord.Embed(
                     title="Team needs help",
-                    description=f"Team {team} is looking for a mentor, please help them",
+                    description=f"Team #{team}-hackthebot is looking for a mentor, please help them :smiling_face_with_3_hearts:",
                     color=int(config.EMBED_COLOR,16)
                 )
                 await mentor_logs_channel.send(embed=embed)
@@ -242,8 +242,8 @@ class hackthebot(commands.Cog, name="hackthebot"):
             permission = text_channel.overwrites.get(role,None)
             if(permission is None or  permission.read_messages is False and permission.send_messages is False):
                 embed = discord.Embed(
-                    title="NO MENTORS HERE",
-                    description="No mentor is allowed to see your channel don't worry",
+                    title="No Mentors Here",
+                    description="No mentor is allowed to see your channel don't worry :wink: ",
                     color=int(config.EMBED_COLOR,16)
                 )
                 await context.channel.send(embed=embed)
@@ -259,8 +259,8 @@ class hackthebot(commands.Cog, name="hackthebot"):
                     await voice_channel.set_permissions(role, read_messages=False,
                                                       send_messages=False) 
                 embed = discord.Embed(
-                    title="THANKS MENTOR",
-                    description="Got your help ? get back to hacking",
+                    title="Thanks Mentor",
+                    description="Got your help :white_check_mark: ? get back to hacking :muscle:",
                     color=int(config.EMBED_COLOR,16)
                 )
                 await context.channel.send(embed=embed)                                         
