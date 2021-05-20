@@ -131,7 +131,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         first_category = guild.get_channel(config.HACK_THE_BOT_SPACES[0])
         text_channels_number = len(list(filter(lambda channel:str(channel.type) == 'text',first_category.channels)))
         space_category = first_category
-        if text_channels_number > 45:
+        if text_channels_number > 24:
             space_category = guild.get_channel(config.HACK_THE_BOT_SPACES[1])
         
         team_role = get(guild.roles, name=f"{team_name}_hackthebot")
