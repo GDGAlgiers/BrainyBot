@@ -84,9 +84,12 @@ class hackthebot(commands.Cog, name="hackthebot"):
             if team_image_message.content !="NONE":
                 if(len(team_image_message.attachments))>0:
                     attachment = Path(team_image_message.attachments[0].filename)
+
                     # verify its an image 
                     if attachment.suffix in validfiles:
                         imageurl = team_image_message.attachments[0].url
+                        if len(imageurl) >100 :
+                             await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign:, The image name you have submitted is to big try to rename it to a.png or something i can handle")
                         data["image"]= imageurl
                     else:
                         await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign:, we accept the following formats only :  .jpg , .jpeg , .gif , .png , .bmp")
@@ -144,7 +147,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
             embed = discord.Embed(
                 title="Team Created",
-                description=f"Team ${team_name} joined the competition",
+                description=f"Team ${team_name} has joined the competition :fire: Good luck for the competition :muscle:",
                 color=int(config.EMBED_COLOR,16),
             )
             embed.set_thumbnail(url=data["image"])
@@ -169,7 +172,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                 log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
                 embed = discord.Embed(
                     title="Team Created",
-                    description=f"Team was created !!",
+                    description=f"Team ${team_name} has joined the war :fire: Good luck for the competition :muscle:",
                     color=int(config.EMBED_COLOR,16),
                 )
                 embed.set_thumbnail(url=data["image"])
