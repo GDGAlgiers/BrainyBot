@@ -142,9 +142,14 @@ class hackthebot(commands.Cog, name="hackthebot"):
             await member.add_roles(team_role)
             await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad  :sunglasses: Good luck on the hack! :muscle:")
             #sending logs to logs channel 
-            #log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
-            #await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
-            # TODO logs
+            log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
+            embed = discord.Embed(
+                title="Team Created",
+                description=f"Team was created !!",
+                color=int(config.EMBED_COLOR,16),
+            )
+            embed.set_thumbnail(url=data["image"])
+            await log_channel.send(embed=embed)
         else:
             await guild.create_role(name=f"{team_name}_hackthebot")
             time.sleep(1)
@@ -162,13 +167,17 @@ class hackthebot(commands.Cog, name="hackthebot"):
             finally:
                 await member.add_roles(role)
                 await context.author.send("SUCCESS!! :white_check_mark:  Welcome abroad :sunglasses: Good luck on the hack! :muscle:")
-                #sending logs to logs channel 
-                #log_channel = guild.get_channel(config.HASHCODE_LOGS_CHANNEL_ID)
-                #await log_channel.send(f"{ctx.author.mention} has joined {TeamName}_team :partying_face:  Welcome to your workspace!! :smiling_face_with_3_hearts:")
-                # TODO logs
+                log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
+                embed = discord.Embed(
+                    title="Team Created",
+                    description=f"Team was created !!",
+                    color=int(config.EMBED_COLOR,16),
+                )
+                embed.set_thumbnail(url=data["image"])
+                await log_channel.send(embed=embed)
 
          
-    @commands.command(name="help-mentor")
+    @commands.command(name="helpMentor")
     async def help_mentor(self,context : commands.Context):
         """
             Calls a mentor to help the team
@@ -180,7 +189,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         text_channel = context.channel
         #TODO* Getting the voice_channel with the same name as text channel
         voice_channel = discord.utils.find(lambda c: c.name == context.channel.name, guild.voice_channels)
-        parts = text_channel.name.split("-")
+        parts = text_channel.name.split("_")
         if len(parts) == 2 and parts[1] == "hackthebot":
             role_name = "HTB-mentor"
             role = get(guild.roles, name=role_name)
@@ -211,7 +220,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                 )
                 await context.channel.send(embed=embed)                                          
                 # Sending log message to mentors to alert them
-                mentor_logs_channel = get(guild.channels, name="mentors-log")
+                mentor_logs_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
                 team = parts[0]
                 embed = discord.Embed(
                     title="Team needs help",
@@ -223,7 +232,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             raise HackTheBotUnknownError(message="Command can only be issued from a team channel")
 
                   
-    @commands.command(name="thanks-mentor")
+    @commands.command(name="thanksMentor")
     async def thanks_mentor(self,context):
         """
             Says thank you to mentor and asks him to leave :)
@@ -235,7 +244,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         print(guild.voice_channels)
         #TODO* Getting the voice_channel with the same name as text channel
         voice_channel = discord.utils.find(lambda c: c.name == context.channel.name, guild.voice_channels)
-        parts = text_channel.name.split("-")
+        parts = text_channel.name.split("_")
         if len(parts) == 2 and parts[1] == "hackthebot":
             role_name = "HTB-mentor"
             role = get(guild.roles, name=role_name)
@@ -295,14 +304,6 @@ class hackthebot(commands.Cog, name="hackthebot"):
             await context.send(res['message'])
         else:
             await context.send(res['status'])
-# utils functions    
-def fetch_issuer_channel(context):
-    """
-    Gets issuer of command channel from api 
-    """
-    channel = "team1-hackthebot"
-    return channel 
-
 
     @commands.command(name="removeMember")
     async def removeMember(self, context,member:discord.Member):
