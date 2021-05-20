@@ -287,7 +287,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         if res["status"] =='UNKNOWN_ERROR':
             raise HackTheBotUnknownError()
         elif res["status"] == 'SUCCESS':
-            team_name = res["team_name"].lower()
+            team_name = res["team_name"]
             guild = self.bot.guilds[0] 
             team_role = get(guild.roles, name=f"{team_name}_hackthebot")
             member = find(lambda m:m.id == user_id,guild.members)
@@ -295,13 +295,6 @@ class hackthebot(commands.Cog, name="hackthebot"):
             await context.send(res['message'])
         else:
             await context.send(res['status'])
-# utils functions    
-def fetch_issuer_channel(context):
-    """
-    Gets issuer of command channel from api 
-    """
-    channel = "team1-hackthebot"
-    return channel 
 
 
     @commands.command(name="removeMember")
@@ -311,20 +304,26 @@ def fetch_issuer_channel(context):
         """
         currentChannel = context.channel
         currentCategory = currentChannel.category
-        team_name = re.findall(r'(.*)_hackthebot$',currentChannel.name)
-        if currentCategory.id==int(config.HACKTHEBOT_CATEGORY_WORKSPACE_ID) and  team_name !=None :
+        #team_name = re.findall(r'(.*)_hackthebot$',currentChannel.name)
+        user_id = context.author.id
+        participant_id =  verify_api(user_id)
+        print(participant_id)
+        r =  requests.get(config.HACK_THE_BOT_URL+f"/api/participant/{participant_id}") 
+        res = r.json()
+        team_name = res['team']['name']
+        print(team_name)
+        if currentCategory.id in  config.HACK_THE_BOT_SPACES and  team_name !=None :
             await context.trigger_typing()
             user_id = context.author.id
             participant_id =verify_api(user_id)
             participant_id_to_delete =verify_api(member.id)
-
             r =  requests.delete(config.HACK_THE_BOT_URL+f"/api/participant/{participant_id}/team/remove",
                             json={"member":participant_id_to_delete}) 
             res = r.json()
             if res["status"] =='UNKNOWN_ERROR':
                 raise HackTheBotUnknownError()
             elif res["status"] == 'SUCCESS':
-                team_role = get(member.roles, name=f"{team_name[0]}_hackthebot")
+                team_role = get(member.roles, name=f"{team_name}_hackthebot")
                 await member.remove_roles(team_role)
                 await context.send("Member deleted successfully")
             else:
