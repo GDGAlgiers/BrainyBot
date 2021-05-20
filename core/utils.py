@@ -5,7 +5,7 @@ import os
 import requests
 from types import SimpleNamespace
 import sys
-
+from core.errors import * 
 
 
 def loads_to_object(json_file):
