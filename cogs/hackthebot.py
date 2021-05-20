@@ -78,7 +78,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         await context.trigger_typing()
         await context.send("The next step is to pass me an image :sunrise_over_mountains: that represents your team. This step is totally optional, send NONE if you don't want to set image  ")
         validfiles = [".jpg", ".jpeg", ".gif", ".png", ".bmp"]
-        data["image"] = "https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/BrainyPdp.png?alt=media&token=69c27608-fbe9-4785-b845-5bc5f0de4830"
+        data["image"] = "https://bit.ly/2T86yC0"
         try:
             team_image_message = await self.bot.wait_for('message', timeout=120, check=lambda message: message.author.id == context.message.author.id  )
             if team_image_message.content !="NONE":
@@ -144,7 +144,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
             embed = discord.Embed(
                 title="Team Created",
-                description=f"Team was created !!",
+                description=f"Team ${team_name} joined the competition",
                 color=int(config.EMBED_COLOR,16),
             )
             embed.set_thumbnail(url=data["image"])
