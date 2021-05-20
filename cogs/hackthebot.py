@@ -60,10 +60,10 @@ class hackthebot(commands.Cog, name="hackthebot"):
         data = {}
 
         ## get team name 
-        await context.send("Please give me the your team name :blush: ! Team name must be alphanumeric only [a-zA-Z0-9]  and length less than 25")
+        await context.send("Please give me the your team name :blush: ! Team name must be alphanumeric  only  and length less than 25")
         try:
             team_name_message = await self.bot.wait_for('message', timeout=120, check=lambda message: message.author.id == context.message.author.id and message.content != "" )
-            team_name = team_name_message.content
+            team_name = team_name_message.content.lower()
 
             if len(team_name)> 25 or not team_name.isalnum():
                 raise HackTheBotInvalidTeamName()
@@ -131,7 +131,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         first_category = guild.get_channel(config.HACK_THE_BOT_SPACES[0])
         text_channels_number = len(list(filter(lambda channel:str(channel.type) == 'text',first_category.channels)))
         space_category = first_category
-        if text_channels_number > 45:
+        if text_channels_number > 24:
             space_category = guild.get_channel(config.HACK_THE_BOT_SPACES[1])
         
         team_role = get(guild.roles, name=f"{team_name}_hackthebot")
