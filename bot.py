@@ -22,6 +22,7 @@ from core.utils import send_embed,loads_to_object
 from core import errors
 from json import  loads
 
+
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
 else:
