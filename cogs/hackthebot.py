@@ -190,7 +190,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         #TODO* Getting the voice_channel with the same name as text channel
         voice_channel = discord.utils.find(lambda c: c.name == context.channel.name, guild.voice_channels)
         parts = text_channel.name.split("_")
-        if len(parts) == 2 and parts[1] == "hackthebot":
+        if len(parts) == 2 and parts[1] == "space":
             role_name = "HTB-mentor"
             role = get(guild.roles, name=role_name)
             permission = text_channel.overwrites.get(role,None)
@@ -244,7 +244,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
         #TODO* Getting the voice_channel with the same name as text channel
         voice_channel = discord.utils.find(lambda c: c.name == context.channel.name, guild.voice_channels)
         parts = text_channel.name.split("_")
-        if len(parts) == 2 and parts[1] == "hackthebot":
+        if len(parts) == 2 and parts[1] == "space":
             role_name = "HTB-mentor"
             role = get(guild.roles, name=role_name)
             permission = text_channel.overwrites.get(role,None)
