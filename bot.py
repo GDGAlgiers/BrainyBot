@@ -119,7 +119,8 @@ async def on_command_error(context, error):
         await send_embed(context,"Not Registered !","It seems that you still has **not registered** to Our Event :eyes:   **OR** you have already registered :white_check_mark:  but you **didn't confirm** :ok: \n if this is the case please confirm by clicking the **confirm button** in the confirmation email :ok:")
     elif isinstance(error,errors.HackTheBotInvalidTeamName):
         await send_embed(context,"Invalid Team Name","Sorry you have submitted a wrong team name ! ")
-
+    elif isinstance(error,commands.errors.CommandNotFound):
+        await send_embed(context,"Invalid Command","Sorry I don't understand this command")
 
     elif isinstance(error,asyncio.exceptions.TimeoutError):
         await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
