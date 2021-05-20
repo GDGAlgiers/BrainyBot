@@ -221,10 +221,9 @@ class hackthebot(commands.Cog, name="hackthebot"):
                 await context.channel.send(embed=embed)                                          
                 # Sending log message to mentors to alert them
                 mentor_logs_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
-                team = parts[0]
                 embed = discord.Embed(
                     title="Team needs help",
-                    description=f"Team #{team}-hackthebot is looking for a mentor, please help them :smiling_face_with_3_hearts:",
+                    description=f"Team {text_channel.mention} is looking for a mentor, please help them :smiling_face_with_3_hearts:",
                     color=int(config.EMBED_COLOR,16)
                 )
                 await mentor_logs_channel.send(embed=embed)
@@ -251,7 +250,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             permission = text_channel.overwrites.get(role,None)
             if(permission is None or  permission.read_messages is False and permission.send_messages is False):
                 embed = discord.Embed(
-                    title="No Mentors Here",
+                    title="No mentors here",
                     description="No mentor is allowed to see your channel don't worry :wink: ",
                     color=int(config.EMBED_COLOR,16)
                 )
@@ -268,7 +267,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                     await voice_channel.set_permissions(role, read_messages=False,
                                                       send_messages=False) 
                 embed = discord.Embed(
-                    title="Thanks Mentor",
+                    title="Thanks mentor",
                     description="Got your help :white_check_mark: ? get back to hacking :muscle:",
                     color=int(config.EMBED_COLOR,16)
                 )
@@ -302,6 +301,14 @@ class hackthebot(commands.Cog, name="hackthebot"):
             member = find(lambda m:m.id == user_id,guild.members)
             await member.add_roles(team_role)
             await context.send(res['message'])
+            log_channel = guild.get_channel(config.HACK_THE_BOT_LOGS)
+            embed = discord.Embed(
+                title=f"Participant joined",
+                description=f"{member.mention} join {team_name}",
+                color=int(config.EMBED_COLOR,16),
+            )
+            #embed.set_thumbnail(url=data["image"])
+            await log_channel.send(embed=embed)
         else:
             await context.send(res['status'])
 
@@ -327,7 +334,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
             elif res["status"] == 'SUCCESS':
                 team_role = get(member.roles, name=f"{team_name[0]}_hackthebot")
                 await member.remove_roles(team_role)
-                await context.send("Member deleted successfully")
+                await context.send("Member removed from team successfully :white_check_mark:")
             else:
                 await context.send(res['status'])
 
