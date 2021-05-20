@@ -119,13 +119,13 @@ class hackthebot(commands.Cog, name="hackthebot"):
             await context.author.send(embed=embed)
             return
         else:
+            print(response)
             embed = discord.Embed(
                     title="Team Created",
                     description=f"Team was created successfully :star_struck:...now your partners can join you using this key {data['token']} by sending me a dm with the `$joinTeam` command ",
                     color=int(config.EMBED_COLOR,16)
             )
             await context.author.send(embed=embed)
-        # TODO logg
         guild = self.bot.guilds[0]  
         first_category = guild.get_channel(config.HACK_THE_BOT_SPACES[0])
         text_channels_number = len(list(filter(lambda channel:str(channel.type) == 'text',first_category.channels)))
