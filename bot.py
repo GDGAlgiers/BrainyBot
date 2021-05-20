@@ -121,6 +121,8 @@ async def on_command_error(context, error):
         await send_embed(context,"Invalid Team Name","Sorry you have submitted a wrong team name ! ")
     elif isinstance(error,commands.errors.CommandNotFound):
         await send_embed(context,"Invalid Command","Sorry I don't understand this command")
+    elif isinstance(error,commands.errors.NoPrivateMessage):
+        await send_embed(context,"Cannot be executed in Private Message","Command cannot be executed in a private message")
 
 #    elif isinstance(error,asyncio.exceptions.TimeoutError):
 #        await send_embed(context,"Timeout ","Message announcement creation failed, you took too long to provide the requested information.")
