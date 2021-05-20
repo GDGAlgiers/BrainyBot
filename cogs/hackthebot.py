@@ -60,10 +60,10 @@ class hackthebot(commands.Cog, name="hackthebot"):
         data = {}
 
         ## get team name 
-        await context.send("Please give me the your team name :blush: ! Team name must be alphanumeric only [a-zA-Z0-9]  and length less than 25")
+        await context.send("Please give me the your team name :blush: ! Team name must be alphanumeric  only  and length less than 25")
         try:
             team_name_message = await self.bot.wait_for('message', timeout=120, check=lambda message: message.author.id == context.message.author.id and message.content != "" )
-            team_name = team_name_message.content
+            team_name = team_name_message.content.lower()
 
             if len(team_name)> 25 or not team_name.isalnum():
                 raise HackTheBotInvalidTeamName()
