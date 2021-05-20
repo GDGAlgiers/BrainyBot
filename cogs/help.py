@@ -18,7 +18,8 @@ else:
 class Help(commands.Cog, name="help"):
     def __init__(self, bot):
         self.bot = bot
-
+        
+    @commands.guild_only()
     @commands.command(name="help")
     async def help(self, context):
         """
