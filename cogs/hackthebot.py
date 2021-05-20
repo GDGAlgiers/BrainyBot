@@ -119,10 +119,9 @@ class hackthebot(commands.Cog, name="hackthebot"):
             await context.author.send(embed=embed)
             return
         else:
-            token = response["token"]
             embed = discord.Embed(
                     title="Team Created",
-                    description=f"Team was created successfully :star_struck:...now your partners can join you using this key {token} by sending me a dm with the `$joinTeam` command ",
+                    description=f"Team was created successfully :star_struck:...now your partners can join you using this key {data['token']} by sending me a dm with the `$joinTeam` command ",
                     color=int(config.EMBED_COLOR,16)
             )
             await context.author.send(embed=embed)
