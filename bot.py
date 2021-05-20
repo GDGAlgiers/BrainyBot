@@ -126,8 +126,9 @@ async def on_command_error(context, error):
         print("Uncaught error !")
         print("Error type:", type(error))
         print("Error message:", error)
-        raise error
         await context.send(":x: Error")
+        raise error
+        
         
 
 #  get the discord token 

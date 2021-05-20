@@ -61,7 +61,7 @@ async def send_embed(context,title, description, color =  int(config.EMBED_COLOR
             )
     await context.send(embed=embed)
 
-async def verify_api(discord_id):
+def verify_api(discord_id):
     r =  requests.post(config.HACK_THE_BOT_URL+"/api/participant/verify", json={"discord_id":discord_id}) 
     res = r.json()
     if res["status"] =='UNAUTHORIZED':
