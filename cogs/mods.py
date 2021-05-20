@@ -90,8 +90,7 @@ class Mod(commands.Cog,name="mod"):
                     post_embed.title = msg_values[1]
                 if len(msg_values) > 2 and msg_values[2].lower() != "none":
                     post_embed.description = msg_values[2]
-                if len(msg_values) > 3 and msg_values[3].lower() != "none":
-                    post_embed.color = int(msg_values[3], 16) 
+
 
             # Prevent sending an empty embed instead of removing it
             if (not post_embed.title) and ( not post_embed.description) :
