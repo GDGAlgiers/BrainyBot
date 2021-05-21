@@ -88,7 +88,7 @@ class general(commands.Cog, name="general"):
             inline=True
         )
         embed.set_footer(
-            text=f"🏓 Pong Catch it if you can!{context.message.author}"
+            text=f"🏓 Pong Don't Catch it if you can!{context.message.author}"
         )
         await context.send(embed=embed)
 
