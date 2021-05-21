@@ -90,6 +90,7 @@ class hackthebot(commands.Cog, name="hackthebot"):
                         imageurl = team_image_message.attachments[0].url
                         if len(imageurl) >100 :
                              await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign:, The image name you have submitted is to big try to rename it to a.png or something i can handle")
+                             return 
                         data["image"]= imageurl
                     else:
                         await send_embed(context, "Cancelled" ,"An invalid file attached :octagonal_sign:, we accept the following formats only :  .jpg , .jpeg , .gif , .png , .bmp")
