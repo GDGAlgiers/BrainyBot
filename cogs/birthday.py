@@ -6,11 +6,11 @@ import sys
 import random
 import json
 import csv
+import asyncio
 import discord
 from discord.ext import commands
 import urllib
-from core.utils import loads_to_object
-
+from core.utils import *
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -55,21 +55,27 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
             full_code = configJson["FULL_CODE"]
         code_len = len(full_code)
         part_len = len(full_code) // 5
-        parts = []
-        for i in range(0, code_len, part_len):
-            if(i+part_len >= code_len):
-                parts.append(full_code[i:])
-            else:
-                parts.append(full_code[i:i+part_len])
-        print(parts)
+        
+        parts = [ full_code[ i:i+part_len ] for i in range(0,len(full_code),part_len) ]
+
 
         if "TRIVIA_QUESTIONS" in os.environ:
             questions = os.getenv("TRIVIA_QUESTIONS")
         else:
             response = urllib.request.urlopen(config.TRIVIA_QUESTIONS)
-            questions = json.loads(response.read())
-        question = random.choices(questions)
-        await ctx.trigger_typing()
+            trivia = json.loads(response.read())
+        part_number= parts.index(code)
+        await send_embed(ctx,"Question ",trivia[part_number]['question'])
+        try:
+            answer = await self.bot.wait_for('message', timeout=30)
+        except asyncio.TimeoutError: 
+                await send_embed(ctx, "Cancelled" ,":octagonal_sign: Command cancelled")
+                await ctx.author.send("Message announcement creation failed, you took too long to provide the requested information.")
+                return 
+        if answer.content == trivia[part_number]['answer'] :
+            await send_embed(ctx,"Hint",trivia[part_number]['hint'])
+        else:
+            await send_embed(ctx,"","Wrong Answer :(")
 
 
 def setup(bot):
