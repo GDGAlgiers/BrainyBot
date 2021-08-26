@@ -12,7 +12,7 @@
         "cogs.owner",
         "cogs.mods",
         "cogs.fun",
-        "cogs.hackthebot"
+        "cogs.birthday"
     ],
 
     "MODERATOR_ROLE": "mod",
@@ -20,4 +20,6 @@
         516805045199699969
     ],
     "EMBED_COLOR": "0x00FF00",
+    "FULL_CODE":"",
+    "TRIVIA_QUESTIONS":""
 }
