@@ -79,29 +79,39 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
                 await send_embed(ctx, "Correct Code part", f"Congratulations you have found the part {part_number+1} of the code reply correctly to the next question to get hint about where to find the next part")
 
             await send_embed(ctx, "Question ", trivia[part_number+1]['question'])
-            try:
-                answer = await self.bot.wait_for('message', timeout=30)
-                if answer.content == trivia[part_number+1]['answer']:
-                    await send_embed(ctx, "Hint", trivia[part_number+1]['hint'])
-                else:
-                    await send_embed(ctx, "", "Wrong Answer :(")
-            except asyncio.TimeoutError:
-                await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
-                await ctx.author.send(" you took too long to provide the requested information.")
-                return
+            answer = None
+            while True:
+                try:
+                    answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.content != "")
+                    print(answer.content)
+                    print(answer)
+                    if answer.content == trivia[part_number+1]['answer']:
+                        await send_embed(ctx, "Hint", trivia[part_number+1]['hint'])
+                        break
+                    else:
+                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
+                except asyncio.TimeoutError:
+                    await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
+                    await ctx.author.send(" you took too long to provide the requested information.")
+                    return
 
         else:
             await send_embed(ctx, "Question", "Here is your first hint, but wait reply to this question correctly first **"+trivia[0]['question']+"**")
-            try:
-                answer = await self.bot.wait_for('message', timeout=30)
-                if answer.content == trivia[0]['answer']:
-                    await send_embed(ctx, "Hint", trivia[0]['hint'])
-                else:
-                    await send_embed(ctx, "", "Wrong Answer :(")
-            except asyncio.TimeoutError:
-                await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
-                await ctx.author.send(" you took too long to provide the requested information.")
-                return
+            answer = None
+            while True:
+                try:
+                    answer = await self.bot.wait_for('message', timeout=30)
+                    print(answer.content)
+                    print(answer)
+                    if answer.content == trivia[0]['answer']:
+                        await send_embed(ctx, "Hint", trivia[0]['hint'])
+                        break
+                    else:
+                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
+                except asyncio.TimeoutError:
+                    await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
+                    await ctx.author.send(" you took too long to provide the requested information.")
+                    return
 
     @commands.dm_only()
     @commands.command(brief="Validate the full code", description='Send the code to brainy and he will validate it and send you your prize!')
