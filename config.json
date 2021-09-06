@@ -1,5 +1,5 @@
 {
-    "DISCORD_TOKEN": "",
+    "DISCORD_TOKEN": "ODA2Mjc3NzcwOTM4MDI0MDA3.YBnGsA.z6FduPFrDw943ZSrzmjiM2_PR0c",
     "SPOT": false,
     "BOT_PREFIX": "$",
     "OWNERS": [
@@ -20,6 +20,6 @@
         516805045199699969
     ],
     "EMBED_COLOR": "0x00FF00",
-    "FULL_CODE":"",
-    "TRIVIA_QUESTIONS":""
+    "FULL_CODE": "1111122222333334444455555",
+    "TRIVIA_QUESTIONS": "https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Ftrivia.json?alt=media&token=e9c761ed-02da-44d5-b242-d906ce815550"
 }
