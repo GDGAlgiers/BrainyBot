@@ -36,7 +36,7 @@ class BirthDayChallenge(commands.Cog, name="birthday"):
 Welcome to our one and only 10th Birthday Challenge of GDG Algiers :partying_face:  I will be Brainy dir android mascot hna your guide through this fun and entertaining challenge :eyes:
 The challenge will help you learn more information about GDG Algiers family and what they have done through the last 10 years :star_struck: 
 The challenge will be a treasure hunt :map: Meaning, the treasure will be a special code split into multiple parts, and as a generous bot I will be the one guiding you to the treasure :relieved::man_detective: Once you find a part, use the  
-`$check [code]` command so that I can give you hints on the next parts :grin: :heart: If you were lucky enough to find the full code try the `$validate [full_code]` to verify you have the full code 
+`$hint [part_found]` command so that I can give you hints on the next parts :grin: :heart: If you were lucky enough to find the full code try the `$validate [full_code]` to verify you have the full code 
 ** Note ** Please don't share the parts you have found or else other challengers will steal your prizes :sad: 
 **Notice: ** For the first hint you can try using the command without code""",
                               title=f"GDG Algiers 10th Birthday challenge")
@@ -48,11 +48,10 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
     @commands.dm_only()
     @commands.command(brief="Verify Part Of the Code", description='Verify part of the code is correct and give hints on the next part')
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def verify(self, ctx, code: commands.clean_content(fix_channel_mentions=True),):
+    async def hint(self, ctx, code: commands.clean_content(fix_channel_mentions=True) = None):
         """
-            Verify the code part you have found 
+            Verify the code part you have found and hint on the next $hint [code]
         """
-
         if "FULL_CODE" in os.environ:
             full_code = os.getenv("FULL_CODE")
         else:
@@ -66,12 +65,11 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
                 parts[-1] = parts[-1] + full_code[i:i+part_len]
             else:
                 parts.append(full_code[i:i+part_len])
-
         if "TRIVIA_QUESTIONS" in os.environ:
-            questions = os.getenv("TRIVIA_QUESTIONS")
-        else:
-            response = urllib.request.urlopen(config.TRIVIA_QUESTIONS)
+            response = urllib.request.urlopen(os.getenv("TRIVIA_QUESTIONS"))
             trivia = json.loads(response.read())
+        else:
+            return
         if code:
             if code not in parts:
                 await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! I can't give you any hint")
@@ -83,31 +81,32 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
             await send_embed(ctx, "Question ", trivia[part_number+1]['question'])
             try:
                 answer = await self.bot.wait_for('message', timeout=30)
+                if answer.content == trivia[part_number+1]['answer']:
+                    await send_embed(ctx, "Hint", trivia[part_number+1]['hint'])
+                else:
+                    await send_embed(ctx, "", "Wrong Answer :(")
             except asyncio.TimeoutError:
                 await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
                 await ctx.author.send(" you took too long to provide the requested information.")
                 return
-            if answer.content == trivia[part_number]['answer']:
-                await send_embed(ctx, "Hint", trivia[part_number+1]['hint'])
-            else:
-                await send_embed(ctx, "", "Wrong Answer :(")
+
         else:
-            await send_embed(ctx, "Question", "Here is your first hint, but wait reply to this question correctly first **"+trivia[part_number]['question']+"**")
+            await send_embed(ctx, "Question", "Here is your first hint, but wait reply to this question correctly first **"+trivia[0]['question']+"**")
             try:
                 answer = await self.bot.wait_for('message', timeout=30)
+                if answer.content == trivia[0]['answer']:
+                    await send_embed(ctx, "Hint", trivia[0]['hint'])
+                else:
+                    await send_embed(ctx, "", "Wrong Answer :(")
             except asyncio.TimeoutError:
                 await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
                 await ctx.author.send(" you took too long to provide the requested information.")
                 return
-            if answer.content == trivia[0]['answer']:
-                await send_embed(ctx, "Hint", trivia[0]['hint'])
-            else:
-                await send_embed(ctx, "", "Wrong Answer :(")
 
     @commands.dm_only()
     @commands.command(brief="Validate the full code", description='Send the code to brainy and he will validate it and send you your prize!')
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def verify(self, ctx, code: commands.clean_content(fix_channel_mentions=True),):
+    async def validate(self, ctx, code: commands.clean_content(fix_channel_mentions=True),):
         """
             Send the code to brainy and he will validate it and send you your prize!
         """
