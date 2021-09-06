@@ -14,12 +14,10 @@ else:
     config = loads_to_object("config.json")
 
 
-
 class Help(commands.Cog, name="help"):
     def __init__(self, bot):
         self.bot = bot
-        
-    @commands.guild_only()
+
     @commands.command(name="help")
     async def help(self, context):
         """
@@ -28,17 +26,19 @@ class Help(commands.Cog, name="help"):
         prefix = config.BOT_PREFIX
 
         embed = discord.Embed(
-            title="Help", description="List of available commands:", color=int(config.EMBED_COLOR,16))
+            title="Help", description="List of available commands:", color=int(config.EMBED_COLOR, 16))
         # loop over all cogs
         for i in self.bot.cogs:
             # if the user is not an owner don't show owner commands
-            if i.lower() =="owner" and context.message.author.id not in config.OWNERS:
+            if i.lower() == "owner" and context.message.author.id not in config.OWNERS:
                 continue
             # if the user is not a mod don't show mod commands
             if i.lower() == "mod":
-                role = discord.utils.find(lambda r: r.name == config.MODERATOR_ROLE, context.message.guild.roles)
-                if role not in context.message.author.roles:
-                    continue
+                if context.message.guild:
+                    role = discord.utils.find(
+                        lambda r: r.name == config.MODERATOR_ROLE, context.message.guild.roles)
+                    if role not in context.message.author.roles:
+                        continue
             # else show cog commands
             cog = self.bot.get_cog(i.lower())
             commands = cog.get_commands()
