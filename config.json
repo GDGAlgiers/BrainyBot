@@ -12,7 +12,7 @@
         "cogs.owner",
         "cogs.mods",
         "cogs.fun",
-        "cogs.hackthebot"
+        "cogs.birthday"
     ],
 
     "MODERATOR_ROLE": "mod",
@@ -20,8 +20,6 @@
         516805045199699969
     ],
     "EMBED_COLOR": "0x00FF00",
-    "HACK_THE_BOT_LOGS": 844087598359117841,
-    "HACK_THE_BOT_URL": "https://htb.gdgalgiers.com",
-    "HACK_THE_BOT_SPACES": [845004789019967550, 845004838580256808],
-    "HACK_THE_BOT_ROLE": 842454863446016021
+    "FULL_CODE":"",
+    "TRIVIA_QUESTIONS":""
 }
