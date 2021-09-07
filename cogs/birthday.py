@@ -124,8 +124,6 @@ Last thing to say, good luck, hero!
             while True:
                 try:
                     answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.author.id == ctx.message.author.id and message.content != "")
-                    print(answer.content)
-                    print(answer)
                     if answer.content == "Stop":
                         await send_embed(ctx, "", "Command Cancelled :x: ")
                         return
@@ -161,7 +159,12 @@ Last thing to say, good luck, hero!
             await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! Try again !! or contact and admin to get help")
             return
         else:
-            await send_embed(ctx, "Quest Completed", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Check this out https://forms.gle/YCCy2ujye6bBhMQQA   \n**Please Note:** Only the first 3 fastest adventurer will win the prizes")
+            if "AWARD_LINK" in os.environ:
+                award_link = os.getenv("AWARD_LINK")
+            else:
+                configJson = json.loads(open("config.json", "r").read())
+                award_link = configJson["AWARD_LINK"]
+            await send_embed(ctx, "Quest Completed", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Check this out {award_link}  \n**Please Note:** Only the first 3 fastest adventurer will win the prizes")
             configJson = json.loads(open("config.json", "r").read())
             birthday_admins = configJson["BIRTHDAY_ADMINS"]
             if not won:
