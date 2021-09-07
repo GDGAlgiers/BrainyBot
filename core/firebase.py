@@ -93,11 +93,15 @@ def validatedCode(user, code, correct):
             "correct": correct,
             "time": str(datetime.now())
         })
+        ref.child("events").set(events)
         if correct:
             ref.child("Winner").set(True)
             if "won_at" not in participant:
                 ref.child("won_at").set(str(datetime.now()))
-        ref.child("events").set(events)
+                return False
+            else:
+                return True
+
     else:
         ref.set({
             "name": user.name,
@@ -112,6 +116,7 @@ def validatedCode(user, code, correct):
                 "time": str(datetime.now())
             }],
         })
+        return False
 
 
 def show_leaderboard():

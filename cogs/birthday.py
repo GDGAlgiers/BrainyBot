@@ -156,7 +156,7 @@ Last thing to say, good luck, hero!
         else:
             configJson = json.loads(open("config.json", "r").read())
             full_code = configJson["FULL_CODE"]
-        validatedCode(ctx.author, code, code == full_code)
+        won = validatedCode(ctx.author, code, code == full_code)
         if code != full_code:
             await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! Try again !! or contact and admin to get help")
             return
@@ -164,9 +164,10 @@ Last thing to say, good luck, hero!
             await send_embed(ctx, "Quest Completed", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Check this out https://forms.gle/YCCy2ujye6bBhMQQA   \n**Please Note:** Only the first 3 fastest adventurer will win the prizes")
             configJson = json.loads(open("config.json", "r").read())
             birthday_admins = configJson["BIRTHDAY_ADMINS"]
-            for admin in birthday_admins:
-                admin_user = await self.bot.fetch_user(admin)
-                await send_embed(admin_user, "We have a winner", f"There is a winner who validated the full code {ctx.author.id}  {ctx.author.mention}  {ctx.author.name}")
+            if not won:
+                for admin in birthday_admins:
+                    admin_user = await self.bot.fetch_user(admin)
+                    await send_embed(admin_user, "We have a winner", f"There is a winner who validated the full code {ctx.author.id}  {ctx.author.mention}  {ctx.author.name}")
 
 
 """
