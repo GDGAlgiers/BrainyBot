@@ -69,7 +69,10 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
             response = urllib.request.urlopen(os.getenv("TRIVIA_QUESTIONS"))
             trivia = json.loads(response.read())
         else:
-            return
+            configJson = json.loads(open("config.json", "r").read())
+            response = urllib.request.urlopen(configJson['TRIVIA_QUESTIONS'])
+            trivia = json.loads(response.read())
+            
         if code:
             if code not in parts:
                 await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! I can't give you any hint")
@@ -85,8 +88,8 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
                     answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.content != "")
                     print(answer.content)
                     print(answer)
-                    if answer.content == trivia[part_number+1]['answer']:
-                        await send_embed(ctx, "Hint", trivia[part_number+1]['hint'])
+                    if answer.content.lower() in trivia[part_number+1]['answer']:
+                        await send_embed(ctx, "Correct answer", trivia[part_number+1]['hint'])
                         break
                     else:
                         await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
