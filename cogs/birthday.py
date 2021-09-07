@@ -80,50 +80,59 @@ Last thing to say, good luck, hero!
             configJson = json.loads(open("config.json", "r").read())
             response = urllib.request.urlopen(configJson['TRIVIA_QUESTIONS'])
             trivia = json.loads(response.read())
-
+        await ctx.trigger_typing()
         if code:
             if code not in parts:
                 await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! I can't give you any hint")
                 return
             else:
                 part_number = parts.index(code)
-                await send_embed(ctx, "Correct Code part", f"Congratulations you have found the part {part_number+1} of the code reply correctly to the next question to get hint about where to find the next part \n Send Stop to stop the command")
-
+                await send_embed(ctx, "Correct Code part", f"Congratulations you have found the part {part_number+1} of the code reply correctly to the next question to get hint about where to find the next part \n **Send Stop to stop the command**")
+            await ctx.trigger_typing()
             await send_embed(ctx, "Question ", trivia[part_number+1]['question'])
             answer = None
             while True:
                 try:
-                    answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.content != "")
+                    answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.author.id == ctx.message.author.id and message.content != "")
                     print(answer.content)
                     print(answer)
                     if answer.content == "Stop":
+                        await send_embed(ctx, "", "Command Cancelled :x: ")
                         return
                     if answer.content.lower() in trivia[part_number+1]['answer']:
+                        await ctx.trigger_typing()
                         await send_embed(ctx, "Correct answer", trivia[part_number+1]['hint'])
                         break
                     else:
-                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
+                        await ctx.trigger_typing()
+                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again\n **Send Stop to stop the command**")
                 except asyncio.TimeoutError:
+                    await ctx.trigger_typing()
                     await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
                     await ctx.author.send(" you took too long to provide the requested information.")
                     return
 
         else:
+            await ctx.trigger_typing()
             await send_embed(ctx, "Question", "Here is your first hint, but wait reply to this question correctly first **"+trivia[0]['question']+"**")
             answer = None
             while True:
                 try:
-                    answer = await self.bot.wait_for('message', timeout=30)
+                    answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.author.id == ctx.message.author.id and message.content != "")
                     print(answer.content)
                     print(answer)
                     if answer.content == "Stop":
+                        await send_embed(ctx, "", "Command Cancelled :x: ")
                         return
                     if answer.content.lower() in trivia[0]['answer']:
+                        await ctx.trigger_typing()
                         await send_embed(ctx, "Correct answer", trivia[0]['hint'])
                         break
                     else:
-                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
+                        await ctx.trigger_typing()
+                        await send_embed(ctx, "", "Wrong Answer :( ; Please try again\n **Send Stop to stop the command**")
                 except asyncio.TimeoutError:
+                    await ctx.trigger_typing()
                     await send_embed(ctx, "Cancelled", ":octagonal_sign: Command cancelled")
                     await ctx.author.send(" you took too long to provide the requested information.")
                     return
