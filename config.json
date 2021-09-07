@@ -21,5 +21,15 @@
     ],
     "EMBED_COLOR": "0x00FF00",
     "FULL_CODE": "",
-    "TRIVIA_QUESTIONS": ""
+    "TRIVIA_QUESTIONS": "",
+    "FIREBASE_CREDS":"https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Fgdg-wtm-website-51a7f993455c.json?alt=media&token=6d051989-c132-4da9-84fd-ea57eb746ecf",
+    "DATABASE_URL":"https://gdg-wtm-website.firebaseio.com/",
+    "BIRTHDAY_ADMINS":[
+        "516805045199699969",
+        "642097099802017793",
+        "663417457557504062",
+        "344906132768161793",
+        "776073434198835221",
+        "644232865856487424"
+    ]
 }

@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 import urllib
 from core.utils import *
+from core.firebase import *
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -51,6 +52,7 @@ Last thing to say, good luck, hero!
                               title=f"GDG Algiers 10th Birthday challenge")
         embed.set_image(
             url="https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Ftreasure.jpg?alt=media&token=7961b10e-f3ba-4c58-961c-983e53c9b718")
+        startChallenge(ctx.author)
         await ctx.send(embed=embed)
 
     @commands.dm_only()
@@ -60,6 +62,7 @@ Last thing to say, good luck, hero!
         """
             Verify the code part you have found and hint on the next $hint [code]
         """
+        await ctx.trigger_typing()
         if "FULL_CODE" in os.environ:
             full_code = os.getenv("FULL_CODE")
         else:
@@ -101,6 +104,8 @@ Last thing to say, good luck, hero!
                         return
                     if answer.content.lower() in trivia[part_number+1]['answer']:
                         await ctx.trigger_typing()
+                        # save log
+                        submittedSuccessfully(ctx.author, code)
                         await send_embed(ctx, "Correct answer", trivia[part_number+1]['hint'])
                         break
                     else:
@@ -126,6 +131,7 @@ Last thing to say, good luck, hero!
                         return
                     if answer.content.lower() in trivia[0]['answer']:
                         await ctx.trigger_typing()
+                        submittedSuccessfully(ctx.author, None)
                         await send_embed(ctx, "Correct answer", trivia[0]['hint'])
                         break
                     else:
@@ -144,18 +150,23 @@ Last thing to say, good luck, hero!
         """
             Send the code to brainy and he will validate it and send you your prize!
         """
-
+        await ctx.trigger_typing()
         if "FULL_CODE" in os.environ:
             full_code = os.getenv("FULL_CODE")
         else:
             configJson = json.loads(open("config.json", "r").read())
             full_code = configJson["FULL_CODE"]
-
+        validatedCode(ctx.author, code, code == full_code)
         if code != full_code:
             await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! Try again !! or contact and admin to get help")
             return
         else:
             await send_embed(ctx, "We have a winner", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Here is your prize enjoy it https://forms.gle/YCCy2ujye6bBhMQQA")
+            configJson = json.loads(open("config.json", "r").read())
+            birthday_admins = configJson["BIRTHDAY_ADMINS"]
+            for admin in birthday_admins:
+                admin_user = await self.bot.fetch_user(admin)
+                await send_embed(admin_user, "We have a winner", f"There is a winner who validated the full code {ctx.author.id}  {ctx.author.mention}  {ctx.author.name}")
 
 
 def setup(bot):
