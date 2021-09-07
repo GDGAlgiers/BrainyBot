@@ -105,7 +105,7 @@ Last thing to say, good luck, hero!
                     if answer.content.lower() in trivia[part_number+1]['answer']:
                         await ctx.trigger_typing()
                         # save log
-                        submittedSuccessfully(ctx.author, code)
+                        submittedSuccessfully(ctx.author, code, part_number+1)
                         await send_embed(ctx, "Correct answer", trivia[part_number+1]['hint'])
                         break
                     else:
@@ -131,7 +131,7 @@ Last thing to say, good luck, hero!
                         return
                     if answer.content.lower() in trivia[0]['answer']:
                         await ctx.trigger_typing()
-                        submittedSuccessfully(ctx.author, None)
+                        submittedSuccessfully(ctx.author, None, 0)
                         await send_embed(ctx, "Correct answer", trivia[0]['hint'])
                         break
                     else:
@@ -161,12 +161,21 @@ Last thing to say, good luck, hero!
             await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! Try again !! or contact and admin to get help")
             return
         else:
-            await send_embed(ctx, "We have a winner", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Here is your prize enjoy it https://forms.gle/YCCy2ujye6bBhMQQA")
+            await send_embed(ctx, "Quest Completed", f"I can't believe that you have successfully found the hidden treasure well done adventurer I'm so proud of the path you have done, Check this out https://forms.gle/YCCy2ujye6bBhMQQA   \n**Please Note:** Only the first 3 fastest adventurer will win the prizes")
             configJson = json.loads(open("config.json", "r").read())
             birthday_admins = configJson["BIRTHDAY_ADMINS"]
             for admin in birthday_admins:
                 admin_user = await self.bot.fetch_user(admin)
                 await send_embed(admin_user, "We have a winner", f"There is a winner who validated the full code {ctx.author.id}  {ctx.author.mention}  {ctx.author.name}")
+
+
+"""
+    @commands.dm_only()
+    @commands.command(brief="Show leaderboard", description='Show the leaderboard of the dev challenge')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def leaderboard(self, ctx):
+        show_leaderboard()
+"""
 
 
 def setup(bot):
