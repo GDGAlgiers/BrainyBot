@@ -32,17 +32,25 @@ class BirthDayChallenge(commands.Cog, name="birthday"):
         await ctx.trigger_typing()
 
         embed = discord.Embed(color=0x00FF00,
-                              description="""Hello Challenger :wave:
-Welcome to our one and only 10th Birthday Challenge of GDG Algiers :partying_face:  I will be Brainy dir android mascot hna your guide through this fun and entertaining challenge :eyes:
-The challenge will help you learn more information about GDG Algiers family and what they have done through the last 10 years :star_struck: 
-The challenge will be a treasure hunt :map: Meaning, the treasure will be a special code split into multiple parts, and as a generous bot I will be the one guiding you to the treasure :relieved::man_detective: Once you find a part, use the  
-`$hint [part_found]` command so that I can give you hints on the next parts :grin: :heart: If you were lucky enough to find the full code try the `$validate [full_code]` to verify you have the full code 
-** Note ** Please don't share the parts you have found or else other challengers will steal your prizes :sad: 
-**Notice: ** For the first hint you can try using the command without code""",
+                              description="""Hello challenger and welcome to our one and only “GDG Algiers’ 10th Birthday Challenge”.
+
+I, Brainy :robot: will be your guide through this fun and entertaining journey, a little green companion along the way, at the end of our fellowship, you will have enough knowledge about GDG Algiers to go by, and I will have to disappear until our paths cross again.
+
+The challenge will be a treasure hunt, meaning it’s a special code split into multiple parts, and being the generous bot that I am, I will help you move around.
+
+As simple as it sounds, once you find a piece, use the `$hint [part_found]` command so that I can give you hints on the next parts.
+
+If you get lucky enough to find the full code, try the `$validate [full_code]` to verify you really won or are still stuck with me for a few more rounds.
+
+**Note:** Please don't share the code pieces you have found or else other challengers will steal your prizes.
+
+**Another note:** For the first hint, you can try using the command `$hint` with no code.
+
+Last thing to say, good luck, hero!
+""",
                               title=f"GDG Algiers 10th Birthday challenge")
         embed.set_image(
-            # https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Ftreasure.jpg?alt=media&token=7961b10e-f3ba-4c58-961c-983e53c9b718
-            url="https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Ftreasure_hunt.jpg?alt=media&token=0efd6d62-85ce-4612-a9df-556e9a8661f8")
+            url="https://firebasestorage.googleapis.com/v0/b/gdg-wtm-website.appspot.com/o/Brainy-Utils%2Ftreasure.jpg?alt=media&token=7961b10e-f3ba-4c58-961c-983e53c9b718")
         await ctx.send(embed=embed)
 
     @commands.dm_only()
@@ -72,14 +80,14 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
             configJson = json.loads(open("config.json", "r").read())
             response = urllib.request.urlopen(configJson['TRIVIA_QUESTIONS'])
             trivia = json.loads(response.read())
-            
+
         if code:
             if code not in parts:
                 await send_embed(ctx, "Wrong Code part", "The code you have submitted is invalid ! I can't give you any hint")
                 return
             else:
                 part_number = parts.index(code)
-                await send_embed(ctx, "Correct Code part", f"Congratulations you have found the part {part_number+1} of the code reply correctly to the next question to get hint about where to find the next part")
+                await send_embed(ctx, "Correct Code part", f"Congratulations you have found the part {part_number+1} of the code reply correctly to the next question to get hint about where to find the next part \n Send Stop to stop the command")
 
             await send_embed(ctx, "Question ", trivia[part_number+1]['question'])
             answer = None
@@ -88,6 +96,8 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
                     answer = await self.bot.wait_for('message', timeout=60, check=lambda message: message.content != "")
                     print(answer.content)
                     print(answer)
+                    if answer.content == "Stop":
+                        return
                     if answer.content.lower() in trivia[part_number+1]['answer']:
                         await send_embed(ctx, "Correct answer", trivia[part_number+1]['hint'])
                         break
@@ -106,8 +116,10 @@ The challenge will be a treasure hunt :map: Meaning, the treasure will be a spec
                     answer = await self.bot.wait_for('message', timeout=30)
                     print(answer.content)
                     print(answer)
-                    if answer.content == trivia[0]['answer']:
-                        await send_embed(ctx, "Hint", trivia[0]['hint'])
+                    if answer.content == "Stop":
+                        return
+                    if answer.content.lower() in trivia[0]['answer']:
+                        await send_embed(ctx, "Correct answer", trivia[0]['hint'])
                         break
                     else:
                         await send_embed(ctx, "", "Wrong Answer :( ; Please try again")
