@@ -125,7 +125,7 @@ async def on_command_error(context, error):
         await send_embed(context,"Cannot be executed in Private Message","Command cannot be executed in a private message")
 
 #    elif isinstance(error,asyncio.exceptions.TimeoutError):
-#        await send_embed(context,"Timeout ", 3cade-2nd-C3r ,"Message announcement creation failed, you took too long to provide the requested information.")
+#        await send_embed(context,"Timeout ", "Message announcement creation failed, you took too long to provide the requested information.")
     else:
         print("Uncaught error !")
         print("Error type:", type(error))
