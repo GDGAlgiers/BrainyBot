@@ -12,7 +12,6 @@
         "cogs.owner",
         "cogs.mods",
         "cogs.fun",
-        "cogs.birthday",
         "cogs.techpoint"
     ],
 
@@ -20,5 +19,9 @@
     "COMANAGERS_IDS": [
         516805045199699969
     ],
-    "EMBED_COLOR": "0x00FF00"
+    "EMBED_COLOR": "0x00FF00",
+    "GITHUB_TOKEN":"",
+    "REPOSITORY_NAME":"",
+    "BRANCH_NAME":"",
+    "REPOSITORY_OWNER":""
 }

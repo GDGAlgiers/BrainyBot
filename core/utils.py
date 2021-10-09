@@ -5,19 +5,18 @@ import os
 import requests
 from types import SimpleNamespace
 import sys
-from core.errors import * 
+from core.errors import *
 import base64
 import requests
 import json
+
 
 def loads_to_object(json_file):
     """
         Loads from a json file  to a python object filling its properties with 
         dictionnary key 
     """
-    return json.loads(open(json_file, "r").read(),object_hook=lambda d: SimpleNamespace(**d))
-
-
+    return json.loads(open(json_file, "r").read(), object_hook=lambda d: SimpleNamespace(**d))
 
 
 if not os.path.isfile("config.json"):
@@ -26,8 +25,7 @@ else:
     config = loads_to_object("config.json")
 
 
-
-async def getchannel(bot,id):
+async def getchannel(bot, id):
     channel = bot.get_channel(id)
     if not channel:
         try:
@@ -38,7 +36,8 @@ async def getchannel(bot,id):
             channel = None
     return channel
 
-async def getuser(bot,id):
+
+async def getuser(bot, id):
     user = bot.get_user(id)
 
     if not user:
@@ -46,7 +45,8 @@ async def getuser(bot,id):
 
     return user
 
-async def getguild(bot,id):
+
+async def getguild(bot, id):
     guild = bot.get_guild(id)
 
     if not guild:
@@ -54,25 +54,15 @@ async def getguild(bot,id):
 
     return guild
 
-async def send_embed(context,title, description, color =  int(config.EMBED_COLOR,16)):
+
+async def send_embed(context, title, description, color=int(config.EMBED_COLOR, 16)):
     embed = discord.Embed(
-                title=title,
-                description=description,
-                color=color
-            )
+        title=title,
+        description=description,
+        color=color
+    )
     await context.send(embed=embed)
 
-def verify_api(discord_id):
-    r =  requests.post(config.HACK_THE_BOT_URL+"/api/participant/verify", json={"discord_id":discord_id}) 
-    res = r.json()
-    if res["status"] =='UNAUTHORIZED':
-        raise HackTheBotNotRegistered()
-    elif res["status"] =='UNKNOWN_ERROR':
-        raise HackTheBotUnknownError()
-    elif res["status"] =='SUCCESS':
-        return res["participant_id"]
-    else:
-        raise HackTheBotUnknownError()
 
 def upload_file_to_github(file_path, file_name, repo_name, owner,  branch_name, token):
     url = "https://api.github.com/repos/"+owner+'/'+repo_name+"/contents/"+file_name
@@ -90,7 +80,6 @@ def upload_file_to_github(file_path, file_name, repo_name, owner,  branch_name, 
         }
 
     response = requests.put(url, data=json.dumps(data), headers=headers)
-    print(response.status_code)
 
     if response.status_code == 201:
         return response.json()["content"]["html_url"]

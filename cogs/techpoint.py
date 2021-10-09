@@ -11,11 +11,8 @@ if not os.path.isfile("config.json"):
 else:
     config = loads_to_object("config.json")
 
-TOKEN = os.getenv('DISCORD_TOKEN')
-GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-REPOSITORY_NAME = os.getenv('REPOSITORY_NAME')
-BRANCH_NAME = os.getenv('BRANCH_NAME')
-REPOSITORY_OWNER = os.getenv('REPOSITORY_OWNER')
+
+
 FILES = {
     "tmp/notes.md" : "Notes",
     "tmp/resources.md" : "Resources",
@@ -33,7 +30,7 @@ class Techpoint(commands.Cog, name="techpoint"):
 
     @commands.has_role(config.MODERATOR_ROLE)  
     @commands.command(name="techpoint")
-    async def techpoint(ctx, *, session_name):
+    async def techpoint(self, ctx, *, session_name):
         '''
         Launch a techpoint session, and enable taking notes and adding resources
         '''
@@ -62,7 +59,7 @@ class Techpoint(commands.Cog, name="techpoint"):
             send_embed(ctx,title=title,description=description)
 
     @commands.command(name="note")
-    async def note(ctx, *, note):
+    async def note(self, ctx, *, note):
         '''
         Add a note to the current session
         '''
@@ -74,8 +71,8 @@ class Techpoint(commands.Cog, name="techpoint"):
 
             await ctx.send("Note added!")
         
-    @commands.command(name="onote")
-    async def add_off_note(ctx, *, note):
+    @commands.command(name="offnote")
+    async def add_off_note(self, ctx, *, note):
         '''
         Add an off topic note to the current session
         '''
@@ -87,8 +84,8 @@ class Techpoint(commands.Cog, name="techpoint"):
 
             await ctx.send("Off topic note added!")
 
-    @commands.command(name="resource")
-    async def add_resource(ctx, url, *, description):
+    @commands.command(name="res")
+    async def add_resource(self, ctx, url, *, description):
         '''
         Add a resource to the current session
         '''
@@ -100,13 +97,13 @@ class Techpoint(commands.Cog, name="techpoint"):
 
             await ctx.send("Resource added!")
 
-    @commands.command(name="oresource")
-    async def add_off_resource(ctx, url, *, description):
+    @commands.command(name="offres")
+    async def add_off_resource(self, ctx, url, *, description):
         '''
         Add an off topic resource to the current session
         '''
         if not _session_active():
-            await ctx.send("A techpoint session must be active")
+            await ctx.send("A techself, point session must be active")
         else:
             with open("tmp/off_resources.md", "a") as file:
                 file.write(list_item(link(description,url),ctx.author.name))
@@ -115,7 +112,23 @@ class Techpoint(commands.Cog, name="techpoint"):
 
     @commands.has_role(config.MODERATOR_ROLE)  
     @commands.command(name="end")
-    async def end_session(ctx):
+    async def end_session(self, ctx):
+        if 'GITHUB_TOKEN'  in os.environ:
+            GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+        else:
+            GITHUB_TOKEN = config.GITHUB_TOKEN
+        if 'REPOSITORY_NAME'  in os.environ:
+            REPOSITORY_NAME = os.getenv('REPOSITORY_NAME')
+        else:
+            REPOSITORY_NAME = config.REPOSITORY_NAME
+        if 'BRANCH_NAME'  in os.environ:
+            BRANCH_NAME = os.getenv('BRANCH_NAME')
+        else:
+            BRANCH_NAME = config.BRANCH_NAME
+        if 'REPOSITORY_OWNER'  in os.environ:
+            REPOSITORY_OWNER = os.getenv('REPOSITORY_OWNER')
+        else:
+            REPOSITORY_OWNER = config.REPOSITORY_OWNER
         session_file = str(date.today())+".md"
         file_path = "tmp/"+session_file
 
