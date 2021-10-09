@@ -29,7 +29,7 @@ class Techpoint(commands.Cog, name="techpoint"):
     def __init__(self, bot):
         self.bot = bot
 
-    # @commands.has_role(config.MODERATOR_ROLE)
+    @commands.has_role(config.MODERATOR_ROLE)
     @commands.command(name="techpoint")
     async def techpoint(self, ctx, *, session_name):
         '''
@@ -115,7 +115,7 @@ class Techpoint(commands.Cog, name="techpoint"):
 
             await ctx.message.add_reaction('✅')
 
-    # @commands.has_role(config.MODERATOR_ROLE)
+    @commands.has_role(config.MODERATOR_ROLE)
     @commands.command(name="end")
     async def end_session(self, ctx):
         if 'GITHUB_TOKEN' in os.environ:
