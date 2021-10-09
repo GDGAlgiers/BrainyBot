@@ -28,7 +28,7 @@ class Techpoint(commands.Cog, name="techpoint"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.has_role(config.MODERATOR_ROLE)
+    # @commands.has_role(config.MODERATOR_ROLE)
     @commands.command(name="techpoint")
     async def techpoint(self, ctx, *, session_name):
         '''
@@ -56,7 +56,7 @@ class Techpoint(commands.Cog, name="techpoint"):
             title = "Techpoint : " + session_name
             description = "Hello techpointers! enjoy your time and don't forget to take notes :) ! "
 
-            send_embed(ctx, title=title, description=description)
+            await send_embed(ctx, title=title, description=description)
 
     @commands.command(name="note")
     async def note(self, ctx, *, note):
@@ -64,12 +64,12 @@ class Techpoint(commands.Cog, name="techpoint"):
         Add a note to the current session
         '''
         if not _session_active():
-            await ctx.send("A techpoint session must be active")
+            await ctx.message.add_reaction('❌')
+            await send_embed(ctx, "Error", "A techpoint session must be active")
         else:
             with open("tmp/notes.md", "a") as file:
                 file.write(list_item(note, ctx.author.name))
-
-            await ctx.send("Note added!")
+            await ctx.message.add_reaction('✅')
 
     @commands.command(name="offnote")
     async def add_off_note(self, ctx, *, note):
@@ -77,12 +77,13 @@ class Techpoint(commands.Cog, name="techpoint"):
         Add an off topic note to the current session
         '''
         if not _session_active():
-            await ctx.send("A techpoint session must be active")
+            await ctx.message.add_reaction('❌')
+            await send_embed(ctx, "Error", "A techpoint session must be active")
         else:
             with open("tmp/off_notes.md", "a") as file:
                 file.write(list_item(note, ctx.author.name))
 
-            await ctx.send("Off topic note added!")
+            await ctx.message.add_reaction('✅')
 
     @commands.command(name="res")
     async def add_resource(self, ctx, url, *, description):
@@ -90,12 +91,13 @@ class Techpoint(commands.Cog, name="techpoint"):
         Add a resource to the current session
         '''
         if not _session_active():
-            await ctx.send("A techpoint session must be active")
+            await ctx.message.add_reaction('❌')
+            await send_embed(ctx, "Error", "A techpoint session must be active")
         else:
             with open("tmp/resources.md", "a") as file:
                 file.write(list_item(link(description, url), ctx.author.name))
 
-            await ctx.send("Resource added!")
+            await ctx.message.add_reaction('✅')
 
     @commands.command(name="offres")
     async def add_off_resource(self, ctx, url, *, description):
@@ -103,14 +105,15 @@ class Techpoint(commands.Cog, name="techpoint"):
         Add an off topic resource to the current session
         '''
         if not _session_active():
-            await ctx.send("A techself, point session must be active")
+            await ctx.message.add_reaction('❌')
+            await send_embed(ctx, "Error", "A techpoint session must be active")
         else:
             with open("tmp/off_resources.md", "a") as file:
                 file.write(list_item(link(description, url), ctx.author.name))
 
-            await ctx.send("Off topic resource added!")
+            await ctx.message.add_reaction('✅')
 
-    @commands.has_role(config.MODERATOR_ROLE)
+    # @commands.has_role(config.MODERATOR_ROLE)
     @commands.command(name="end")
     async def end_session(self, ctx):
         if 'GITHUB_TOKEN' in os.environ:
@@ -143,7 +146,7 @@ class Techpoint(commands.Cog, name="techpoint"):
                             h2(FILES[file]) + '\n' + sub_file.read() + '\n')
                         os.remove(file)
 
-            url = upload_file_to_github(file_path, "Techpoint/"+session_file,
+            url = upload_file_to_github(file_path, "TechPoint/"+session_file,
                                         REPOSITORY_NAME, REPOSITORY_OWNER, BRANCH_NAME, GITHUB_TOKEN)
 
             if(url != None):
