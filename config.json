@@ -12,7 +12,8 @@
         "cogs.owner",
         "cogs.mods",
         "cogs.fun",
-        "cogs.birthday"
+        "cogs.birthday",
+        "cogs.techpoint"
     ],
 
     "MODERATOR_ROLE": "mod",
