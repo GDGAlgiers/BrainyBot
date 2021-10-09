@@ -6,7 +6,9 @@ import requests
 from types import SimpleNamespace
 import sys
 from core.errors import * 
-
+import base64
+import requests
+import json
 
 def loads_to_object(json_file):
     """
@@ -52,7 +54,6 @@ async def getguild(bot,id):
 
     return guild
 
-
 async def send_embed(context,title, description, color =  int(config.EMBED_COLOR,16)):
     embed = discord.Embed(
                 title=title,
@@ -72,3 +73,26 @@ def verify_api(discord_id):
         return res["participant_id"]
     else:
         raise HackTheBotUnknownError()
+
+def upload_file_to_github(file_path, file_name, repo_name, owner,  branch_name, token):
+    url = "https://api.github.com/repos/"+owner+'/'+repo_name+"/contents/"+file_name
+
+    headers = {
+        "Authorization": "token " + token,
+        "Accept": "application/vnd.github.v3.raw",
+        "Content-Type": "application/json"
+    }
+
+    with open(file_path, "rb") as file:
+        data = {
+            "message": "Uploaded " + file_name + " to " + branch_name,
+            "content": base64.b64encode(file.read()).decode("utf-8")
+        }
+
+    response = requests.put(url, data=json.dumps(data), headers=headers)
+    print(response.status_code)
+
+    if response.status_code == 201:
+        return response.json()["content"]["html_url"]
+    else:
+        return None
