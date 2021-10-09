@@ -30,6 +30,7 @@ httplib2==0.19.1
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.3
+Markdown==3.3.4
 MarkupSafe==1.1.1
 msgpack==1.0.2
 multidict==5.1.0

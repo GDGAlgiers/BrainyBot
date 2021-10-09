@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from core.utils import upload_file_to_github, loads_to_object, send_embed
 from core.markdown_utils import *
+import markdown
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -45,6 +46,7 @@ class Techpoint(commands.Cog, name="techpoint"):
 
             # Create the global file that will contain all the notes
             with open('tmp/'+str(date.today())+".md", "a") as file:
+                file.write('---\nTitle: ' + session_name+'\n---\n')
                 file.write(h1("Techpoint : " + session_name)+'\n')
                 file.write(h4(str(date.today()))+'\n')
 
@@ -138,21 +140,26 @@ class Techpoint(commands.Cog, name="techpoint"):
         if not _session_active():
             await ctx.send("A techpoint session must be active")
         else:
+            session_title = ''
             # Merge the content of the FILES
-            with open(file_path, "a") as global_file:
+            with open(file_path, "r+") as global_file:
+                md = markdown.Markdown(extensions=['meta'])
+                md.convert(global_file.read())
+                session_title = md.Meta['title'][0]
                 for file in FILES:
                     with open(file, "r") as sub_file:
                         global_file.write(
                             h2(FILES[file]) + '\n' + sub_file.read() + '\n')
                         os.remove(file)
 
-            url = upload_file_to_github(file_path, "TechPoint/"+session_file,
+            url = upload_file_to_github(file_path, "TechPoint/"+str(date.today())+'-'+session_title+".md",
                                         REPOSITORY_NAME, REPOSITORY_OWNER, BRANCH_NAME, GITHUB_TOKEN)
 
             if(url != None):
                 # Remove the file only if the upload is sucessful
                 os.remove(file_path)
-                await ctx.send("Session ended! Check it out here : " + url)
+                message = await ctx.send("Session ended! Check out the notes here : " + url)
+                await message.pin()
             else:
                 await ctx.send("Something went wrong :(")
 
