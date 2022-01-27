@@ -30,9 +30,7 @@ async def getchannel(bot, id):
     if not channel:
         try:
             channel = await bot.fetch_channel(id)
-        except discord.InvalidData:
-            channel = None
-        except discord.HTTPException:
+        except (discord.InvalidData, discord.HTTPException):
             channel = None
     return channel
 
