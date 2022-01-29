@@ -53,6 +53,24 @@ class Fun(commands.Cog, name="fun"):
             advice = advices_list[number][0]
             await ctx.send(advice)
 
+    @commands.command(
+        brief="Get a Quote",
+        description="Get an inspirational quote from a wise bot :) ",
+    )
+    async def quote(self, ctx):
+        """Get an inspirational quote from a wise bot :)"""
+
+        await ctx.trigger_typing()
+        # Quotes based on https://gist.github.com/JakubPetriska/060958fd744ca34f099e947cd080b540
+        with open("core/BrainyQuotes.csv", "r") as dataset:
+            quotes_list = list(csv.reader(dataset, delimiter=","))
+            quotes_len = len(quotes_list)
+            number = random.randint(0, quotes_len - 1)
+            author, quote = quotes_list[number]
+            if not author:
+                author = "Someone"
+            await ctx.send(f"{author}: {quote}")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
